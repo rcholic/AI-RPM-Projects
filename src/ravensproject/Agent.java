@@ -77,7 +77,9 @@ public class Agent {
     public int Solve(RavensProblem problem) {
 
 
-        /**** print out for testing/learning purpose only
+
+        System.out.println("num of figures is: " + problem.getFigures().size());
+
         System.out.println("Figures keyset:is: " + problem.getFigures().keySet().toString());
 //        System.out.println("Figures valueSet is: " + problem.getFigures().entrySet().toString());
 
@@ -94,7 +96,7 @@ public class Agent {
             return -1;
         }
 
-        */
+
 
         if (problem.getProblemType().contains("2x1")) {
             System.out.println("problem type is 2x1");

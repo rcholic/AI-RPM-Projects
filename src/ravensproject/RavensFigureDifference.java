@@ -28,12 +28,14 @@ public class RavensFigureDifference {
         RavensFigure figure1 = null;
         RavensFigure figure2 = null;
 
-        if (curProblem().getFigures().size() == 4) {
+        //2x2 (figures including the 6 answer choices)
+        if (curProblem().getFigures().size() == 9) {
             figure1 = curProblem().getFigures().get("A");
             figure2 = curProblem().getFigures().get("B");
             this.HDifferenceTable = identifyFigureDifferences(figure1, figure2);
 
-        } else if (curProblem().getFigures().size() == 6) {
+            //3x3 (figures including the 8 answer choices)
+        } else if (curProblem().getFigures().size() == 16) {
             Map<String, String> tempDifferenceTable1 = new HashMap<>();
             Map<String, String> tempDifferenceTable2 = new HashMap<>();
             Map<String, String> firstRowDifferenceTable = new HashMap<>();
