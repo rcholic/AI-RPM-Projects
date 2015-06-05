@@ -34,20 +34,11 @@ public class Agent {
      */
 
     private List<String> providedChoices;
-    private Map<String, Integer> scoreTable;
-
+    private int numChoices;
+    private RavensFigureSimilarity ravensFigureSimilarity;
+//    private Map<String, Integer> scoreTable;
     public Agent() {
-        providedChoices = new ArrayList<String>(9);  // max number of choices is 9
-        //populate the choices with numbers of String representation
-        for (int i = 1; i < 10; i++) {
-            providedChoices.add(Integer.toString(i));
-        }
-
-        //key is the attribute, value is 1 (constant)
-        scoreTable = new HashMap<String, Integer>();
-        scoreTable.put("shape", 10);
-        scoreTable.put("size", 9);
-        scoreTable.put("fill", 8);
+        ravensFigureSimilarity = null; //to be constructed on the fly
     }
     /**
      * The primary method for solving incoming Raven's Progressive Matrices.
@@ -78,15 +69,18 @@ public class Agent {
 
 
 
+        /*
         System.out.println("num of figures is: " + problem.getFigures().size());
 
         System.out.println("Figures keyset:is: " + problem.getFigures().keySet().toString());
 //        System.out.println("Figures valueSet is: " + problem.getFigures().entrySet().toString());
 
         for (Map.Entry<String, RavensFigure> entry : problem.getFigures().entrySet()) {
+//            System.out.println(entry.getValue().getName() + " has the shape: " + problem.getFigures().get(entry.getKey()).getObjects());
             System.out.println("problem name: " + problem.getName() + " has the figures: " + entry.getValue().getName() + " and it has the objects: ");
 
             for (Map.Entry<String, RavensObject> object : entry.getValue().getObjects().entrySet()) {
+                System.out.println("the object has key: " + object.getKey().toString());
                 System.out.println(object.getValue().getAttributes().keySet().toString());
             }
             System.out.println("----------- Finished and----");
@@ -95,35 +89,113 @@ public class Agent {
         if (problem.getName().contains("Challenge")) {
             return -1;
         }
+        */
 
 
+        int chosenAnswer = -1;
 
         if (problem.getProblemType().contains("2x1")) {
             System.out.println("problem type is 2x1");
-            return solve2x1Problem(problem);
+            solve2x1Problem(problem);
         } else if (problem.getProblemType().contains("2x2")) {
-            System.out.println("problem type is 2x2");
-            return solve2x2Problem(problem);
+            numChoices = 6;
+           // System.out.println("problem type is 2x2");
+            chosenAnswer = solve2x2Problem(problem);
         } else if (problem.getProblemType().contains("3x3")) {
+            numChoices = 9;
             System.out.println("problem type is 3x3");
-            return solve3x3Problem(problem);
+            solve3x3Problem(problem);
         }
 
-        return -1;
+        //populate the choices with numbers of String representation
+        providedChoices = new ArrayList<>(numChoices);
+        for (int i = 1; i <= numChoices; i++) {
+            providedChoices.add(Integer.toString(i));
+        }
 
+        return chosenAnswer;
     }
 
     private int solve2x2Problem(RavensProblem problem) {
-        return 3;
+
+        int horizonSimilarityScore = 0;
+        int verticalSimilarityScore = 0;
+
+        ravensFigureSimilarity = new RavensFigureSimilarity(problem);
+        Map<String, Integer> HorizonSimilarityMap = ravensFigureSimilarity.getHDifferenceTable();
+        horizonSimilarityScore = calculateRavensFigureSimilaritiesScore(HorizonSimilarityMap);
+        Map<String, Integer> VerticalSimilarityMap = ravensFigureSimilarity.getVDifferenceTable();
+        verticalSimilarityScore = calculateRavensFigureSimilaritiesScore(VerticalSimilarityMap);
+
+//        System.out.println("horizon score: " + horizonSimilarityScore + "; vertical score: " + verticalSimilarityScore);
+
+        //compare the figure in each answer choices and match against the similarity score with figure B or Figure C
+        int chosenChoice = checkAnswerChoices(problem, horizonSimilarityScore, verticalSimilarityScore);
+        System.out.println("chosenChoice = " + chosenChoice);
+
+        return chosenChoice;
+
     }
 
     private int solve2x1Problem(RavensProblem problem) {
-        //TODO
+        //TODO: may not need to implement this
         return -1;
     }
 
     private int solve3x3Problem(RavensProblem problem) {
-        //TODO
+        //TODO: skip for project 1
         return -1;
     }
+
+
+    /**
+     * Get summation of the similarity values
+     *
+     * @param similarities, Map<String, Integer>
+     * @return
+     */
+    private int calculateRavensFigureSimilaritiesScore(Map<String, Integer> similarities) {
+
+        int sum = 0;
+        for (Map.Entry<String, Integer> entry : similarities.entrySet()) {
+            sum += entry.getValue();
+        }
+
+        return sum;
+    }
+
+
+    /**
+     *
+     * check individual answer choices for the best matching with the known similarity scores:
+     * against the highest similarity scores with either vertically or horizontally aignled figures
+     *
+     * @param problem
+     * @param horizontalSimilarityScore: complete figures in the top row(s)
+     * @param verticalSimilarityScore complete figures in the vertical row(s)
+     * @return Integer, chosen answer choice
+     */
+    private int checkAnswerChoices(RavensProblem problem, int horizontalSimilarityScore, int verticalSimilarityScore) {
+        int curSimilarityScore = Math.max(horizontalSimilarityScore, verticalSimilarityScore);
+        int answerChoice = -1;
+
+        //iterate over each answer choice, and calculate the similarity score
+        for (int i = 1; i <= numChoices; i++) {
+
+            RavensFigure curRavensFigureAnswer = problem.getFigures().get(Integer.toString(i));
+            Map<String, Integer> answerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(curRavensFigureAnswer, problem.getFigures().get("C"));
+            int tempHorSimilarityScore = calculateRavensFigureSimilaritiesScore(answerSimilarity);
+
+            answerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(curRavensFigureAnswer, problem.getFigures().get("B"));
+            int tempVerSimilarityScore = calculateRavensFigureSimilaritiesScore(answerSimilarity);
+
+            if (Math.max(tempHorSimilarityScore, tempVerSimilarityScore) >= curSimilarityScore) {
+                answerChoice = i;
+            }
+        }
+
+        return answerChoice;
+
+    }
+
 }
