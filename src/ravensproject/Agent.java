@@ -118,20 +118,14 @@ public class Agent {
 
     private int solve2x2Problem(RavensProblem problem) {
 
-        int horizonSimilarityScore = 0;
-        int verticalSimilarityScore = 0;
-
         ravensFigureSimilarity = new RavensFigureSimilarity(problem);
-        Map<String, Integer> HorizonSimilarityMap = ravensFigureSimilarity.getHDifferenceTable();
-        horizonSimilarityScore = calculateRavensFigureSimilaritiesScore(HorizonSimilarityMap);
-        Map<String, Integer> VerticalSimilarityMap = ravensFigureSimilarity.getVDifferenceTable();
-        verticalSimilarityScore = calculateRavensFigureSimilaritiesScore(VerticalSimilarityMap);
+        Map<String, Integer> horizonSimilarityMap = ravensFigureSimilarity.getHDifferenceTable();
+        Map<String, Integer> verticalSimilarityMap = ravensFigureSimilarity.getVDifferenceTable();
 
-//        System.out.println("horizon score: " + horizonSimilarityScore + "; vertical score: " + verticalSimilarityScore);
 
         //compare the figure in each answer choices and match against the similarity score with figure B or Figure C
-        int chosenChoice = checkAnswerChoices(problem, horizonSimilarityScore, verticalSimilarityScore);
-        System.out.println("chosenChoice = " + chosenChoice);
+        int chosenChoice = checkAnswerChoices(problem, horizonSimilarityMap, verticalSimilarityMap);
+      //  System.out.println("chosenChoice = " + chosenChoice);
 
         return chosenChoice;
 
@@ -148,22 +142,6 @@ public class Agent {
     }
 
 
-    /**
-     * Get summation of the similarity values
-     *
-     * @param similarities, Map<String, Integer>
-     * @return
-     */
-    private int calculateRavensFigureSimilaritiesScore(Map<String, Integer> similarities) {
-
-        int sum = 0;
-        for (Map.Entry<String, Integer> entry : similarities.entrySet()) {
-            sum += entry.getValue();
-        }
-
-        return sum;
-    }
-
 
     /**
      *
@@ -171,31 +149,61 @@ public class Agent {
      * against the highest similarity scores with either vertically or horizontally aignled figures
      *
      * @param problem
-     * @param horizontalSimilarityScore: complete figures in the top row(s)
-     * @param verticalSimilarityScore complete figures in the vertical row(s)
+     * @param horizonSimilarityMap: Figure objects change patterns in the top row(s)
+     * @param verticalSimilarityMap Figure objects change patterns in the left column(s)
      * @return Integer, chosen answer choice
      */
-    private int checkAnswerChoices(RavensProblem problem, int horizontalSimilarityScore, int verticalSimilarityScore) {
-        int curSimilarityScore = Math.max(horizontalSimilarityScore, verticalSimilarityScore);
+    private int checkAnswerChoices(RavensProblem problem, Map<String, Integer> horizonSimilarityMap, Map<String, Integer> verticalSimilarityMap) {
+
         int answerChoice = -1;
+        int matchedScore = 0;
 
         //iterate over each answer choice, and calculate the similarity score
         for (int i = 1; i <= numChoices; i++) {
 
-            RavensFigure curRavensFigureAnswer = problem.getFigures().get(Integer.toString(i));
-            Map<String, Integer> answerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(curRavensFigureAnswer, problem.getFigures().get("C"));
-            int tempHorSimilarityScore = calculateRavensFigureSimilaritiesScore(answerSimilarity);
-
-            answerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(curRavensFigureAnswer, problem.getFigures().get("B"));
-            int tempVerSimilarityScore = calculateRavensFigureSimilaritiesScore(answerSimilarity);
-
-            if (Math.max(tempHorSimilarityScore, tempVerSimilarityScore) >= curSimilarityScore) {
+            RavensFigure curRavensFigureAnswer = problem.getFigures().get(Integer.toString(i)); //figure in the answer choice
+            //row-wise
+            Map<String, Integer> rowAnswerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(problem.getFigures().get("C"), curRavensFigureAnswer);
+            int rowMatchScore = calculateAnswerMatchScore(rowAnswerSimilarity, horizonSimilarityMap);
+            if (rowMatchScore > matchedScore) {
+                matchedScore = rowMatchScore;
                 answerChoice = i;
             }
+
+            /*
+            //column-wise comparison with answer
+            Map<String, Integer> colAnswerSimilarity = ravensFigureSimilarity.identifyFigureSimilarities(problem.getFigures().get("B"), curRavensFigureAnswer);
+            int colMatchScore = calculateAnswerMatchScore(colAnswerSimilarity, verticalSimilarityMap);
+            if (colMatchScore > matchedScore) {
+                matchedScore = colMatchScore;
+                answerChoice = i;
+            }
+            */
+
+
         }
 
         return answerChoice;
 
+    }
+
+    /**
+     * Calculate the match score of each answer choice for the patterns identified in the row or column
+     *
+     * @param answerSimilarity, either rowAnswerSimilarity or colAnswerSimilarity in the checkAnswerChoice method above
+     * @param referenceSimilarity, either horizonSimilarityMap or verticalSimilarityMap in the parameters of checkAnswerChoice method above
+     * @return the matched score
+     */
+    private int calculateAnswerMatchScore(Map<String, Integer> answerSimilarity, Map<String, Integer> referenceSimilarity) {
+        int matchScore = 0;
+
+        for (String key : answerSimilarity.keySet()) {
+            if (referenceSimilarity.containsKey(key) && answerSimilarity.get(key) == referenceSimilarity.get(key)) {
+                matchScore++;
+            }
+        }
+
+        return matchScore;
     }
 
 }

@@ -12,7 +12,10 @@ public class RavensFigureSimilarity {
     private Map<String, Integer> VDifferenceTable; //vertical difference
     private RavensProblem problem;
     private static Map<String, Integer> scoreMap;
-    private final static String[] ravenObjectAttributes = {"shape", "size", "fill", "inside", "above", "angle"};
+    private final static String[] ravenObjectAttributes = {"shape", "size", "fill"}; //"inside", "above", "angle"
+
+    //do not compare the value for equality for these attributes
+//    private static List<String> ignoredAttributesForEquality = null;
 
     //assign weight to different attributes
     static {
@@ -24,6 +27,14 @@ public class RavensFigureSimilarity {
         scoreMap.put("inside", 6);
         scoreMap.put("above", 6);
         scoreMap.put("angle", 5);
+
+        /*
+        ignoredAttributesForEquality = new ArrayList<String>();
+        ignoredAttributesForEquality.add("inside");
+        ignoredAttributesForEquality.add("above");
+        */
+
+
     }
 
     public RavensFigureSimilarity() {}
@@ -86,8 +97,6 @@ public class RavensFigureSimilarity {
             //this.HDifferenceTable
 
         }
-
-
         return this.HDifferenceTable;
     }
 
@@ -152,18 +161,27 @@ public class RavensFigureSimilarity {
                 RavensObject curRavensObj1 = ravensObjectList1.get(i);
                 RavensObject curRavensObj2 = ravensObjectList2.get(i);
 
+                //iterate through the ravensObject attributes and add score if two objects match and apply penalty otherwise
                 for (String attribute : ravenObjectAttributes) {
-                    if (curRavensObj1.getAttributes().containsKey(attribute) && curRavensObj2.getAttributes().containsKey(attribute)) {
-                        diffMap.put(attribute, scoreMap.get(attribute));
+                    Map<String, String> attributesMap1 = curRavensObj1.getAttributes();
+                    Map<String, String> attributesMap2 = curRavensObj2.getAttributes();
+                    if (attributesMap1.containsKey(attribute) && attributesMap2.containsKey(attribute)) {
+
+                        if (attributesMap1.get(attribute).equalsIgnoreCase(attributesMap2.get(attribute))) {
+                            //add score for matched attributes
+                            diffMap.put(attribute, 1);  //scoreMap.get(attribute)
+                        } else {
+                            //penalty for non-matched attributes (negative)
+                            diffMap.put(attribute, -1); //-(scoreMap.get(attribute)
+                        }
                     }
                 }
             }
 
-
         } else {
-            System.out.println("number of objects is different, figure 1: " + figure1.getName() + " figure 2: " + figure2.getName());
+          //  System.out.println("number of objects is different, figure 1: " + figure1.getName() + " figure 2: " + figure2.getName());
             //TODO: does this make sense?
-            diffMap.put("numObject", figure1.getObjects().size() - figure2.getObjects().size()); //get the difference
+            diffMap.put("diffNumObjects", figure1.getObjects().size() - figure2.getObjects().size()); //get the difference
         }
 
 
