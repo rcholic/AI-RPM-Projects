@@ -19,6 +19,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
+ * Class Geometry in Java:
+ * http://docs.oracle.com/javase/7/docs/api/java/awt/geom/AffineTransform.html
+ *
+ * Generalised Hough transform: https://en.wikipedia.org/wiki/Generalised_Hough_transform
+ *
+ * Flood fill algorithm: for detecting pixels and images
+ *
  * The main driver file for the project. You may edit this file while debugging
  * and designing, but you should not depend on changes to this file for final
  * execution of your project. Your project will be graded using our own version
