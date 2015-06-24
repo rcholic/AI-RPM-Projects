@@ -35,7 +35,7 @@ public class Agent {
 
     private List<String> providedChoices;
     private int numChoices;
-    private RavensFigureSimilarity ravensFigureSimilarity;
+    private ravensproject.RavensFigureSimilarity ravensFigureSimilarity;
 //    private Map<String, Integer> scoreTable;
     public Agent() {
         ravensFigureSimilarity = null; //to be constructed on the fly
@@ -118,7 +118,7 @@ public class Agent {
 
     private int solve2x2Problem(RavensProblem problem) {
 
-        ravensFigureSimilarity = new RavensFigureSimilarity(problem);
+        ravensFigureSimilarity = new ravensproject.RavensFigureSimilarity(problem);
         Map<String, Integer> horizonSimilarityMap = ravensFigureSimilarity.getHDifferenceTable();
         Map<String, Integer> verticalSimilarityMap = ravensFigureSimilarity.getVDifferenceTable();
 
