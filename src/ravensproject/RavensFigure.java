@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class RavensFigure {
     private String name;
-    private HashMap<String, RavensObject> objects;
+    private HashMap<String,RavensObject> objects;
     
     private String visualFilename;
         
@@ -30,7 +30,7 @@ public class RavensFigure {
      */
     public RavensFigure(String name, String problemName, String setName) {
         this.name=name;
-        visualFilename= "Problems" + File.separator + setName + File.separator + problemName + File.separator + name + ".png";
+        visualFilename="Problems" + File.separator + setName + File.separator + problemName + File.separator + name + ".png";
         objects=new HashMap<>();
     }
     

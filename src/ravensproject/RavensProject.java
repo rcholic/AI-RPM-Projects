@@ -38,7 +38,6 @@ public class RavensProject {
         
         Scanner r = null;
         try {                                                           // ProblemSetList.txt lists the sets to solve.
-            // r = new Scanner(new File(new File("").getAbsolutePath() + "/src/ravensproject/Problems/ProblemSetList.txt"));
             r = new Scanner(new File("Problems" + File.separator + "ProblemSetList.txt"));
         } catch(Exception ex) {                                         // Sets will be solved in the order they appear in ProblemSetList.txt.
             System.out.println(ex);                                     // You may modify ProblemSetList.txt to toggle what sets your agent addresses.
@@ -72,8 +71,6 @@ public class RavensProject {
                                                                             // Your agent cannot change its answer once it has checked its answer.
                                                                             // If your agent encounters an error before giving an answer, the question will be counted as Skipped.
                         
-                      //  System.out.println("the correct anwser is: " + problem.checkAnswer(1));
-
                         results.println(problem.getName() + "," + problem.getGivenAnswer() + "," + problem.getCorrect() + "," + problem.checkAnswer(0));
                     } catch(Exception ex) {
                         System.out.println("Error encountered in " + problem.getName());
