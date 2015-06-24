@@ -26,6 +26,8 @@ import java.util.Scanner;
  *
  * Flood fill algorithm: for detecting pixels and images
  *
+ * shape matching paper: https://www.cs.berkeley.edu/~malik/papers/BMP-shape.pdf
+ *
  * The main driver file for the project. You may edit this file while debugging
  * and designing, but you should not depend on changes to this file for final
  * execution of your project. Your project will be graded using our own version
