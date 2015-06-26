@@ -79,6 +79,12 @@ public class ObjectTransformation {
      * attributes -> get a similarity score, which is used for ranking
      * RavensObject so we can find matched RavensObject
      *
+     * Each RavensObject in a Figure is compared with all the RavensObject in another
+     * RavensFigure, these comparisons are ranked by similarityScore to find the best
+     * matched RavensObject.
+     *
+     * <b>Matching is only necessary for RavensFigure that has multiple objects</b>
+     *
      * @param obj
      * @return
      */
@@ -89,4 +95,20 @@ public class ObjectTransformation {
     }
 
 
+    //getters and setters
+    public RavensObject getRavensObject1() {
+        return ravensObject1;
+    }
+
+    public void setRavensObject1(RavensObject ravensObject1) {
+        this.ravensObject1 = ravensObject1;
+    }
+
+    public RavensObject getRavensObject2() {
+        return ravensObject2;
+    }
+
+    public void setRavensObject2(RavensObject ravensObject2) {
+        this.ravensObject2 = ravensObject2;
+    }
 }

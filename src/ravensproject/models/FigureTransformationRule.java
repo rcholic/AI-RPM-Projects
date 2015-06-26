@@ -33,9 +33,9 @@ public class FigureTransformationRule {
      * key: the index of RavensObject in each RavensFigure
      * value: the two matched RavensObject
      *
-     * @return
+     * @return Map Object or null if no match is found
      */
-    public Map<Integer, List<RavensObject>> getMatchingObjects() {
+    private Map<Integer, List<RavensObject>> getMatchingObjects() {
 
         Map<Integer, List<RavensObject>> matchedObjects = null;
         if (this.ravensFigure1 == null || this.ravensFigure2 == null) {
