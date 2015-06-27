@@ -1,5 +1,7 @@
 package ravensproject.models.RavenFigureLevel;
 
+import ravensproject.RavensFigure;
+
 import java.util.List;
 
 /**
@@ -13,5 +15,18 @@ import java.util.List;
  */
 public class RFTransformation {
 
-    private List<ROSpatialRelationshipsInRF> spatialRelationships;
+    // private List<ROSpatialRelationshipsInRF> spatialRelationships;
+    private RavensFigure ravensFigure1;
+    private RavensFigure ravensFigure2;
+
+    public RFTransformation() {}
+
+    public RFTransformation(RavensFigure ravensFigure1, RavensFigure ravensFigure2) {
+        this.ravensFigure1 = ravensFigure1;
+        this.ravensFigure2 = ravensFigure2;
+    }
+
+
+
+
 }
