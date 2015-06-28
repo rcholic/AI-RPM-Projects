@@ -65,12 +65,16 @@ public class Agent {
     public int Solve(RavensProblem problem) {
 
         System.out.println("solving problem: " + problem.getName());
+
+        /*
         Map<String, RavensFigure> figuresMap = problem.getFigures();
 
         RavensFigure figureA = figuresMap.get("A");
         RavensFigure figureB = figuresMap.get("B");
         System.out.println("identying the matched RavensObject between Figures A and B: ");
         ROMatcher match = new ROMatcher(figureA, figureB);
+
+        */
 
         /*
         for (CorrespondingRO cr : match.getMatchedROs()) {
@@ -80,6 +84,7 @@ public class Agent {
         }
         */
 
+        /*
         RFTransformation rfTransformation = new RFTransformation(figureA, figureB);
 
         for (ROTransformationInterface roTransformation : rfTransformation.compileROTransformationsInMatchedObjects()) {
@@ -90,6 +95,7 @@ public class Agent {
 
         System.out.println("----------------next RPM-----------------------------------------");
 
+        */
 
         /*
         for (Map.Entry<String, RavensFigure> entry : figuresMap.entrySet()) {
@@ -97,6 +103,10 @@ public class Agent {
         }
         */
 
-        return -1;
+        AgentDelegate delegate = new AgentDelegate(problem);
+        delegate.solve();
+        return delegate.answerChoice;
+
+//        return -1;
     }
 }
