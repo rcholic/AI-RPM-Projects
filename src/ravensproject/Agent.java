@@ -70,9 +70,9 @@ public class Agent {
         System.out.println("identying the matched RavensObject between Figures A and B: ");
         ROMatch match = new ROMatch(figureA, figureB);
 
-        for (CorrespondingRO ro : match.getMatchedROs()) {
-            System.out.println("matched: in Figure A: " + ro.getRavensObject1().getName() + " --- in Figure B:"
-                    + ro.getRavensFigure2().getName());
+        for (CorrespondingRO cr : match.getMatchedROs()) {
+            System.out.println("matched: in Figure A: " + cr.getRavensObject1().getName() + " --- in Figure B:"
+                    + cr.getRavensObject2().getName());
             System.out.println("************************************");
         }
 

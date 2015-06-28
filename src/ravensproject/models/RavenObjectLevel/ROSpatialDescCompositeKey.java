@@ -64,6 +64,13 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
         return (this.ravensObjectName + this.spatialDesc).hashCode();
     }
 
+
+    @Override
+    public String toString() {
+        return "Object name: " + this.ravensObjectName +
+                "| spatialDesc: " + this.spatialDesc;
+    }
+
     public RavensObject getRavensObject() {
         return ravensObject;
     }

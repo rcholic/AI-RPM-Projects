@@ -18,7 +18,7 @@ public class ROMatch {
 
     private ROSpatialRelationshipsInRF figure1Spatial;
     private ROSpatialRelationshipsInRF figure2Spatial;
-    public List<CorrespondingRO> matchedROs;
+    public Set<CorrespondingRO> matchedROs;
     public List<RavensObject> unmatchedROs;
 
     public ROMatch() {}
@@ -29,17 +29,20 @@ public class ROMatch {
         this.ravensFigure2 = ravensFigure2;
         this.figure2Spatial = new ROSpatialRelationshipsInRF(this.ravensFigure2);
 
-        matchedROs = new ArrayList<CorrespondingRO>();
+        matchedROs = new HashSet<>();
         unmatchedROs = new ArrayList<RavensObject>();
     }
 
     /**
-     * could be empty matches
+     *
      * Get a List of matched RavensObjects, data type is List<CorrespondingRO>
-     * @return List<CorrespondingRO>
+     * @return Set<CorrespondingRO>, could be empty matches
      */
-    public List<CorrespondingRO> getMatchedROs() {
+    public Set<CorrespondingRO> getMatchedROs() {
         //spatially unrelated RavensObject should be no more than one in each Figure (??!!) -- big assumption
+        System.out.println("spatially unrelated objects, figure 1 has " + figure1Spatial.unrelatedRavensObjects.size()
+        + ", figure 2 has " + figure2Spatial.unrelatedRavensObjects.size());
+
         if (figure1Spatial.unrelatedRavensObjects.size() == figure2Spatial.unrelatedRavensObjects.size()) {
             for (int i = 0; i < figure1Spatial.unrelatedRavensObjects.size(); i++) {
                 String objectNameInFig1 = this.figure1Spatial.unrelatedRavensObjects.get(i).getName();
@@ -51,12 +54,14 @@ public class ROMatch {
         //handle the spatially related RavensObjects below
         //convert the keySet to List for better iteration
         List<ROSpatialDescCompositeKey> figure1RelatedObjectKeys = new ArrayList<>();
-        figure1RelatedObjectKeys.addAll(figure1Spatial.relatedRavensObjects.keySet());
+        figure1RelatedObjectKeys.addAll(figure1Spatial.relatedRavensObjects.keySet()); //convert set to List
         Collections.sort(figure1RelatedObjectKeys);
+        System.out.println("spatially related ObjectKeys1: " + figure1RelatedObjectKeys);
 
         List<ROSpatialDescCompositeKey> figure2RelatedObjectKeys = new ArrayList<>();
-        figure2RelatedObjectKeys.addAll(figure2Spatial.relatedRavensObjects.keySet());
+        figure2RelatedObjectKeys.addAll(figure2Spatial.relatedRavensObjects.keySet()); //convert set to List
         Collections.sort(figure2RelatedObjectKeys);
+        System.out.println("spatially related ObjectKeys2: " + figure2RelatedObjectKeys);
 
         if (figure1RelatedObjectKeys.size() == figure2RelatedObjectKeys.size()) {
             System.out.println("the number of spatially related RO in Figure 1 IS EQUAL to those in Figure 2!");
@@ -67,7 +72,7 @@ public class ROMatch {
 
                 //check if key1 is equal to key2 (in terms of spatial relationship: e.g. above) and
                 // their associated RavensObjects' names (a Set<String> for equality)
-                if (key1.equals(key2) && figure1Spatial.relatedRavensObjects.get(key1).equals(figure2Spatial.relatedRavensObjects.get(key2))) {
+                if (key1.equals(key2) && figure1Spatial.relatedRavensObjects.get(key1).size() == (figure2Spatial.relatedRavensObjects.get(key2).size())) {
                     RavensObject relatedObjectInFig1 = key1.getRavensObject();
                     RavensObject relatedObjectInFig2 = key2.getRavensObject();
 

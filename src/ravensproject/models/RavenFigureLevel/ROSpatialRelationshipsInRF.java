@@ -8,16 +8,14 @@ import java.util.*;
 
 /**
  * Created by guoliangwang on 6/27/15.
- *
+ * <p>
  * Given a Raven's Figure, describe the Spatial Relationships for all the Raven's Object in the Figure
  * so that corresponding Raven's Object can be identified (??)
- *
+ * <p>
  * Model class for describing a Raven's Object and its associated RO in space, which could be:
  * left-of, inside, above, overlaps, etc
- *
+ * <p>
  * Note that not all RO has spatial relationships ( must have > 1 RO inside a Raven's Figure)
- *
- *
  */
 public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelationshipsInRF> {
 
@@ -48,14 +46,15 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
         oppositeAttributes.put("outside", "inside");
     }
 
-    public ROSpatialRelationshipsInRF() {}
+    public ROSpatialRelationshipsInRF() {
+    }
 
     /**
      * In the constructor:
-     *
+     * <p>
      * Break down the given RavensFigure, iterate over the RavensObjects contained in this Figure
      * If only one RavensObject, then there is no spatial relationship (this.hasSpatialRelationships = false)
-     *
+     * <p>
      * If multiple RavensObjects exist, try to identify the spatial Relationships in the following way:
      * Iterate over the RavensObject, for each RavensObject, collect the associated RavensObjects as a List, and use the
      * subject RavensObject and its spatial description (e.g. 'above') as the composite key for saving in the
@@ -75,10 +74,16 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
 
             //iterate the RavensObjects to see if any of them has spatial relationships --> may need to change data structure
             for (RavensObject ro : this.ravensFigure.getObjects().values()) {
-                for (String spatialDesc : spatialAttributes) {
-                    if (ro.getAttributes().containsKey(spatialDesc)) {
 
-                        hasSpatialRelationships = true;
+                List<AttributeTuple> availableSpatialAttrs = spatialAttributesInRO(ro.getAttributes(), spatialAttributes);
+                //ro contains spatial attributes
+                if (availableSpatialAttrs.size() > 0) {
+
+                    hasSpatialRelationships = true;
+
+                    //iterate over the found spatial attributes in the RavensObject
+                    for (AttributeTuple attrTuple : availableSpatialAttrs) {
+                        String spatialDesc = attrTuple.spatialAttributeName;
 
                         //ROSpatialDescCompositeKey indicates the subject RavensObject and its spatial relationship with the associated RO
                         ROSpatialDescCompositeKey ROSpatialDescCompositeKey = new ROSpatialDescCompositeKey(ro, spatialDesc);
@@ -94,6 +99,7 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
                         // should put b, c, or d as key and indicate they are below a
                         String oppositeSpatialDesc = oppositeAttributes.get(spatialDesc);
                         //put the opposite relation RO into the map
+
                         if (oppositeSpatialDesc != null) {
                             for (String oppositeROName : associatedRavensObjectNames) {
                                 RavensObject oppositeRO = this.ravensFigure.getObjects().get(oppositeROName);
@@ -107,12 +113,12 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
                                 this.relatedRavensObjects.put(ROSpatialDescCompositeKey, associatedRavensObjectNames);
                             }
                         }
-
-                    } else {
-                        //add ro to unrelated RavensObjects (spatially)
-                        unrelatedRavensObjects.add(ro);
                     }
+                } else {
+                    //add ro to unrelated RavensObjects (spatially)
+                    unrelatedRavensObjects.add(ro);
                 }
+
             }
         }
     }
@@ -121,6 +127,7 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     /**
      * custom compareTo method to return the differences in ROSpatialRelationships in
      * current RavensFigure and the other RavensFigure
+     *
      * @param that
      * @return
      */
@@ -189,18 +196,15 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     }
 
 
-
     //getter
     public RavensFigure getRavensFigure() {
         return ravensFigure;
     }
 
 
-
     /****** private helper methods ******/
 
     /**
-     *
      * @param RavensOjectNamesStr, String, RavensObject names delimited by comma
      * @return List of RavensObject Names contained in current RavensFigure, could an empty List (?)
      */
@@ -227,7 +231,6 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     }
 
 
-
     private int countNumRelatedObjects(Map<ROSpatialDescCompositeKey, Set<String>> relatedRavensObjects) {
         int numRavensObjects = 0;
 
@@ -238,4 +241,40 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
         }
         return numRavensObjects;
     }
+
+
+    /**
+     * @param curRavensObjectAttributes
+     * @return
+     */
+    private List<AttributeTuple> spatialAttributesInRO(Map<String, String> curRavensObjectAttributes, List<String> curSpatialAttributes) {
+
+        List<AttributeTuple> availableSpatialAttrs = new ArrayList<>();
+
+        for (String spatialAttr : curSpatialAttributes) {
+            if (curRavensObjectAttributes.containsKey(spatialAttr)) {
+                availableSpatialAttrs.add(new AttributeTuple(spatialAttr, true));
+            }
+        }
+
+        return availableSpatialAttrs;
+    }
+
+
+    /**
+     * Tuple for indicating if an attribute in a RavensObject exists or not
+     */
+    private class AttributeTuple {
+        public String spatialAttributeName;
+        public boolean exists;
+
+        public AttributeTuple() {
+        }
+
+        public AttributeTuple(String spatialAttributeName, boolean exists) {
+            this.spatialAttributeName = spatialAttributeName;
+            this.exists = exists;
+        }
+    }
+
 }

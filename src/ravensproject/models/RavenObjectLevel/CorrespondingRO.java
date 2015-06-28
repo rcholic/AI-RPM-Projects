@@ -43,6 +43,30 @@ public class CorrespondingRO {
         return matchedROs;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof CorrespondingRO)) {
+            return false;
+        }
+
+        CorrespondingRO that = (CorrespondingRO) o;
+
+        return this.ravensFigure1.getName().equals(that.ravensFigure1.getName()) &&
+                this.ravensObject1.getName().equals(that.ravensObject1.getName()) &&
+                this.ravensFigure2.getName().equals(that.ravensFigure2.getName()) &&
+                this.ravensObject2.getName().equals(that.ravensObject2.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.ravensFigure1.getName() + this.ravensObject1.getName() +
+                this.ravensFigure2.getName() + this.ravensObject2.getName()).hashCode();
+    }
+
     public RavensObject getRavensObject1() {
         return ravensObject1;
     }
