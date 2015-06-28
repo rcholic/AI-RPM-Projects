@@ -3,7 +3,9 @@ package ravensproject.models.RavenObjectLevel;
 import ravensproject.RavensObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * for generating a composite key for describing the spatial relationship between a
@@ -21,6 +23,7 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
     public ROSpatialDescCompositeKey(RavensObject ravensObject, String spatialDesc) {
         this.ravensObject = ravensObject;
         this.spatialDesc = spatialDesc;
+        this.ravensObjectName = this.ravensObject.getName();
     }
 
     public ROSpatialDescCompositeKey(String ravensObjectName, String spatialDesc) {
@@ -58,7 +61,7 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
 
     @Override
     public int hashCode() {
-        return (this.ravensObject.getName() + this.spatialDesc).hashCode();
+        return (this.ravensObjectName + this.spatialDesc).hashCode();
     }
 
     public RavensObject getRavensObject() {
@@ -72,7 +75,7 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
 
     public static void main(String[] args) {
         ROSpatialDescCompositeKey key1 = new ROSpatialDescCompositeKey("object1", "above");
-        ROSpatialDescCompositeKey key2 = new ROSpatialDescCompositeKey("object2", "above");
+        ROSpatialDescCompositeKey key2 = new ROSpatialDescCompositeKey("object1", "left-of");
         ROSpatialDescCompositeKey key3 = new ROSpatialDescCompositeKey("object3", "below");
 
         List<ROSpatialDescCompositeKey> keys = new ArrayList<>();
@@ -83,6 +86,13 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
         if (keys.contains(key3)) {
             System.out.println("keys contains key3");
         }
+
+        Map<ROSpatialDescCompositeKey, String> myMap = new HashMap<>();
+        myMap.put(key1, key1.getSpatialDesc());
+        myMap.put(key2, key2.getSpatialDesc());
+        myMap.put(key3, key3.getSpatialDesc());
+
+        System.out.println(myMap.get(key2));
 
         System.out.println(key1.equals(key2));
     }

@@ -24,8 +24,8 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     public static Map<String, String> oppositeAttributes = new HashMap<String, String>();
     public boolean hasSpatialRelationships = false; //default: No spatial relationships in the Figure
     public static List<String> spatialAttributes = new ArrayList<String>();
-    public Map<ROSpatialDescCompositeKey, List<RavensObject>> relatedRavensObjects; //key: ROSpatialDescCompositeKey, value: List<RavensObject>
-    public List<RavensObject> unrelatedRavensObjects;  //RavensObject who does not have space relationship
+    public Map<ROSpatialDescCompositeKey, Set<String>> relatedRavensObjects; //key: ROSpatialDescCompositeKey, value: List<RavensObject>
+    public List<RavensObject> unrelatedRavensObjects;  //RavensObject who does not have <b>spatial relationship</b>
 
     private RavensFigure ravensFigure;
 
@@ -64,13 +64,13 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
      */
     public ROSpatialRelationshipsInRF(RavensFigure ravensFigure) {
         this.ravensFigure = ravensFigure;
-        this.relatedRavensObjects = new HashMap<ROSpatialDescCompositeKey, List<RavensObject>>();
-        this.unrelatedRavensObjects = new ArrayList<>();
+        this.relatedRavensObjects = new HashMap<ROSpatialDescCompositeKey, Set<String>>();
+        this.unrelatedRavensObjects = new ArrayList<RavensObject>();  //spatially unrelated only!
 
         //this.ravensObjects = new ArrayList(ravensFigure.getObjects().values()); //save the RavensObjects in this RavensFigure
         if (this.ravensFigure.getObjects().size() == 1) {
             hasSpatialRelationships = false; // one Ravens Object cannot have spatial relationships
-            this.unrelatedRavensObjects = new ArrayList(this.ravensFigure.getObjects().values());
+            this.unrelatedRavensObjects = new ArrayList(this.ravensFigure.getObjects().values()); // new HashSet<>(convertRavensObjectsToNames(this.ravensFigure.getObjects().values()));
         } else {
 
             //iterate the RavensObjects to see if any of them has spatial relationships --> may need to change data structure
@@ -85,23 +85,27 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
 
                         // get a String of RavensObject names, delimited by comma, then convert them to RavensObject, save to the map
                         String associatedRavensObjectNamesStr = ro.getAttributes().get(spatialDesc);
-                        List<RavensObject> associatedRavensObjects = convertRONamesStrToListOfRavensObjects(associatedRavensObjectNamesStr);
-                        this.relatedRavensObjects.put(ROSpatialDescCompositeKey, associatedRavensObjects);
+                        Set<String> associatedRavensObjectNames = new HashSet<>(convertRONamesStrToListOfRONames(associatedRavensObjectNamesStr));
+                        this.relatedRavensObjects.put(ROSpatialDescCompositeKey, new HashSet<>(associatedRavensObjectNames));
+
 
                         //put the opposite attributes in the relatedRavensObject
                         //e.g. object a above b, c, d
                         // should put b, c, or d as key and indicate they are below a
                         String oppositeSpatialDesc = oppositeAttributes.get(spatialDesc);
-                        //TODO: put the opposite relation RO into the map
-                        for (RavensObject oppositeRO : convertRONamesStrToListOfRavensObjects(associatedRavensObjectNamesStr)) {
-                            ROSpatialDescCompositeKey = new ROSpatialDescCompositeKey(oppositeRO, oppositeSpatialDesc);
-                            if (this.relatedRavensObjects.containsKey(ROSpatialDescCompositeKey)) {
-                                associatedRavensObjects = this.relatedRavensObjects.get(ROSpatialDescCompositeKey);
-                            } else {
-                                associatedRavensObjects = new ArrayList<>();
+                        //put the opposite relation RO into the map
+                        if (oppositeSpatialDesc != null) {
+                            for (String oppositeROName : associatedRavensObjectNames) {
+                                RavensObject oppositeRO = this.ravensFigure.getObjects().get(oppositeROName);
+                                ROSpatialDescCompositeKey = new ROSpatialDescCompositeKey(oppositeRO, oppositeSpatialDesc);
+                                if (this.relatedRavensObjects.containsKey(ROSpatialDescCompositeKey)) {
+                                    associatedRavensObjectNames = this.relatedRavensObjects.get(ROSpatialDescCompositeKey);
+                                } else {
+                                    associatedRavensObjectNames = new HashSet<String>();
+                                }
+                                associatedRavensObjectNames.add(ro.getName());
+                                this.relatedRavensObjects.put(ROSpatialDescCompositeKey, associatedRavensObjectNames);
                             }
-                            associatedRavensObjects.add(ro);
-                            this.relatedRavensObjects.put(ROSpatialDescCompositeKey, associatedRavensObjects);
                         }
 
                     } else {
@@ -198,15 +202,15 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     /**
      *
      * @param RavensOjectNamesStr, String, RavensObject names delimited by comma
-     * @return List of RavensObjects contained in current RavensFigure, could an empty List (?)
+     * @return List of RavensObject Names contained in current RavensFigure, could an empty List (?)
      */
-    private List<RavensObject> convertRONamesStrToListOfRavensObjects(String RavensOjectNamesStr) {
-        List<RavensObject> RavensObjectsInThisRF = new ArrayList<RavensObject>();
+    private List<String> convertRONamesStrToListOfRONames(String RavensOjectNamesStr) {
+        List<String> RavensObjectsInThisRF = new ArrayList<String>();
         Map<String, RavensObject> currRavensObjectsMap = this.ravensFigure.getObjects();
         String[] RONames = RavensOjectNamesStr.trim().split(","); //RavensObject names array of String
         for (String name : RONames) {
             if (currRavensObjectsMap.containsKey(name)) {
-                RavensObjectsInThisRF.add(currRavensObjectsMap.get(name));
+                RavensObjectsInThisRF.add(name);
             }
         }
 
@@ -214,21 +218,24 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
     }
 
 
+    private List<String> convertRavensObjectsToNames(Collection<RavensObject> ravensObjects) {
+        List<String> ravenObjectNames = new ArrayList<String>();
+        for (RavensObject object : ravensObjects) {
+            ravenObjectNames.add(object.getName());
+        }
+        return ravenObjectNames;
+    }
 
-    private int countNumRelatedObjects(Map<ROSpatialDescCompositeKey, List<RavensObject>> relatedRavensObjects) {
+
+
+    private int countNumRelatedObjects(Map<ROSpatialDescCompositeKey, Set<String>> relatedRavensObjects) {
         int numRavensObjects = 0;
 
         if (relatedRavensObjects.size() > 0) {
-            for (List<RavensObject> ravensObjects : relatedRavensObjects.values()) {
-                numRavensObjects += ravensObjects.size();
+            for (Set<String> ravensObjectNames : relatedRavensObjects.values()) {
+                numRavensObjects += ravensObjectNames.size();
             }
         }
         return numRavensObjects;
     }
-
-
-    public static void main(String[] args) {
-
-    }
-
 }

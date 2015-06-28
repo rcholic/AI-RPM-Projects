@@ -5,6 +5,11 @@ package ravensproject;
 //import java.io.File;
 //import javax.imageio.ImageIO;
 
+import ravensproject.models.RavenObjectLevel.CorrespondingRO;
+import ravensproject.models.RavenObjectLevel.ROMatch;
+
+import java.util.Map;
+
 /**
  * Your Agent for solving Raven's Progressive Matrices. You MUST modify this
  * file.
@@ -56,6 +61,30 @@ public class Agent {
      * @return your Agent's answer to this problem
      */
     public int Solve(RavensProblem problem) {
+
+        System.out.println("solving problem: " + problem.getName());
+        Map<String, RavensFigure> figuresMap = problem.getFigures();
+
+        RavensFigure figureA = figuresMap.get("A");
+        RavensFigure figureB = figuresMap.get("B");
+        System.out.println("identying the matched RavensObject between Figures A and B: ");
+        ROMatch match = new ROMatch(figureA, figureB);
+
+        for (CorrespondingRO ro : match.getMatchedROs()) {
+            System.out.println("matched: in Figure A: " + ro.getRavensObject1().getName() + " --- in Figure B:"
+                    + ro.getRavensFigure2().getName());
+            System.out.println("************************************");
+        }
+
+        System.out.println("----------------next RPM-----------------------------------------");
+
+
+        /*
+        for (Map.Entry<String, RavensFigure> entry : figuresMap.entrySet()) {
+            System.out.println("Figure name: " + entry.getKey());
+        }
+        */
+
         return -1;
     }
 }
