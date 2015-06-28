@@ -11,7 +11,8 @@ import java.util.Map;
  * Model class for changes in Fill of two Raven's Objects
  *
  */
-public class ROFillChange {
+public class ROFillChange implements ROTransformationInterface {
+    private final static String RO_ATTRIBUTE_KEY = "fill";
     private RavensObject ravensObject1;
     private RavensObject ravensObject2;
     private String ravensObject1Fill;
@@ -37,10 +38,10 @@ public class ROFillChange {
         this.ravensObject1 = ravensObject1;
         this.ravensObject2 = ravensObject2;
 
-        if (this.ravensObject1.getAttributes().containsKey("fill") &&
-                this.ravensObject2.getAttributes().containsKey("fill")) {
-            this.ravensObject1Fill = this.ravensObject1.getAttributes().get("fill");
-            this.ravensObject2Fill = this.ravensObject2.getAttributes().get("fill");
+        if (this.ravensObject1.getAttributes().containsKey(RO_ATTRIBUTE_KEY) &&
+                this.ravensObject2.getAttributes().containsKey(RO_ATTRIBUTE_KEY)) {
+            this.ravensObject1Fill = this.ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY);
+            this.ravensObject2Fill = this.ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY);
 
             if (this.ravensObject2Fill.equalsIgnoreCase("no") && this.ravensObject1Fill.equalsIgnoreCase("no")) {
                 this.secondObjFilled = false;
@@ -61,6 +62,11 @@ public class ROFillChange {
         }
     }
 
+
+    @Override
+    public String getAttributeKeyName() {
+        return RO_ATTRIBUTE_KEY;
+    }
 
     /**
      * Compare the fill changes between two ROFillChange objects

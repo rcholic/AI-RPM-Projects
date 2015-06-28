@@ -13,7 +13,7 @@ import java.util.Map;
  *
  *
  */
-public class ROSizeChange {
+public class ROSizeChange implements ROTransformationInterface {
 
     private final static String RO_ATTRIBUTE_KEY = "size";
     private final static int NON_COMPARABLE_SIZEDIFF = -100;
@@ -67,6 +67,11 @@ public class ROSizeChange {
         } else {
             return -NON_COMPARABLE_SIZEDIFF; //no size attribute, no need to compare size
         }
+    }
+
+    @Override
+    public String getAttributeKeyName() {
+        return RO_ATTRIBUTE_KEY;
     }
 
     @Override

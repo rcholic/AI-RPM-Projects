@@ -12,7 +12,8 @@ import ravensproject.RavensObject;
  *
  */
 
-public class ROShapeTransformation {
+public class ROShapeTransformation implements ROTransformationInterface {
+    private final static String RO_ATTRIBUTE_KEY = "shape";
     private String fromShape;
     private String toShape;
     private RavensObject ravensObject1;
@@ -23,16 +24,21 @@ public class ROShapeTransformation {
     public ROShapeTransformation(RavensObject ravensObject1, RavensObject ravensObject2) {
         this.ravensObject1 = ravensObject1;
         this.ravensObject2 = ravensObject2;
-        if (this.ravensObject1.getAttributes().containsKey("shape") &&
-                this.ravensObject2.getAttributes().containsKey("shape")) {
-            this.fromShape = this.ravensObject1.getAttributes().get("shape");
-            this.toShape = this.ravensObject2.getAttributes().get("shape");
+        if (this.ravensObject1.getAttributes().containsKey(RO_ATTRIBUTE_KEY) &&
+                this.ravensObject2.getAttributes().containsKey(RO_ATTRIBUTE_KEY)) {
+            this.fromShape = this.ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY);
+            this.toShape = this.ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY);
         }
     }
 
     public ROShapeTransformation(String fromShape, String toShape) {
         this.fromShape = fromShape;
         this.toShape = toShape;
+    }
+
+    @Override
+    public String getAttributeKeyName() {
+        return RO_ATTRIBUTE_KEY;
     }
 
     @Override
@@ -55,6 +61,12 @@ public class ROShapeTransformation {
 
         return this.fromShape.equalsIgnoreCase(that.fromShape) &&
                 this.toShape.equalsIgnoreCase(that.toShape);
+    }
+
+    @Override
+    public String toString() {
+        return "fromShape: " + this.fromShape +
+                ", toShape: " + this.toShape;
     }
 
 
