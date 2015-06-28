@@ -82,7 +82,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
                 this.ravensObject2.getName()).hashCode();
     }
 
-    public List<ROTransformationInterface> getDiffInROTransformations(ROTransformation anotherROTransformation) {
+    public List<ROTransformationInterface> compareAnotherROTransformations(ROTransformation anotherROTransformation) {
         List<ROTransformationInterface> differences = new ArrayList<>();
         if (!this.equals(anotherROTransformation)) {
             if (!this.roAngleChange.equals(anotherROTransformation.roAngleChange)) {
