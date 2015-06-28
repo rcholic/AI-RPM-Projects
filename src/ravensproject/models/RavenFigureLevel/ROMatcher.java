@@ -1,8 +1,11 @@
-package ravensproject.models.RavenObjectLevel;
+package ravensproject.models.RavenFigureLevel;
 
 import ravensproject.RavensFigure;
 import ravensproject.RavensObject;
 import ravensproject.models.RavenFigureLevel.ROSpatialRelationshipsInRF;
+import ravensproject.models.RavenObjectLevel.CorrespondingRO;
+import ravensproject.models.RavenObjectLevel.ROSpatialDescCompositeKey;
+import ravensproject.models.RavenObjectLevel.RavensFigObjNameComposite;
 
 import java.util.*;
 
@@ -10,9 +13,10 @@ import java.util.*;
  * Created by guoliangwang on 6/27/15.
  *
  * Given two RavensFigures, find out the matched RavensObjects
+ * by Spatial Relationships
  *
  */
-public class ROMatch {
+public class ROMatcher {
     private RavensFigure ravensFigure1;
     private RavensFigure ravensFigure2;
 
@@ -22,9 +26,9 @@ public class ROMatch {
     // public List<RavensObject> unmatchedROs;
     public Set<RavensFigObjNameComposite> unmatchedROs;
 
-    public ROMatch() {}
+    public ROMatcher() {}
 
-    public ROMatch(RavensFigure ravensFigure1, RavensFigure ravensFigure2) {
+    public ROMatcher(RavensFigure ravensFigure1, RavensFigure ravensFigure2) {
         this.ravensFigure1 = ravensFigure1;
         this.figure1Spatial = new ROSpatialRelationshipsInRF(this.ravensFigure1);
         this.ravensFigure2 = ravensFigure2;
@@ -57,12 +61,12 @@ public class ROMatch {
         //convert the keySet to List for better iteration
         List<ROSpatialDescCompositeKey> figure1RelatedObjectKeys = new ArrayList<>();
         figure1RelatedObjectKeys.addAll(figure1Spatial.relatedRavensObjects.keySet()); //convert set to List
-        Collections.sort(figure1RelatedObjectKeys, new ROSpatialDescCompositeKey());
+        Collections.sort(figure1RelatedObjectKeys, new ROSpatialDescCompositeKey()); //use comparator
         System.out.println("spatially related ObjectKeys1: " + figure1RelatedObjectKeys);
 
         List<ROSpatialDescCompositeKey> figure2RelatedObjectKeys = new ArrayList<>();
         figure2RelatedObjectKeys.addAll(figure2Spatial.relatedRavensObjects.keySet()); //convert set to List
-        Collections.sort(figure2RelatedObjectKeys, new ROSpatialDescCompositeKey());
+        Collections.sort(figure2RelatedObjectKeys, new ROSpatialDescCompositeKey()); //use comparator for sorting
         System.out.println("spatially related ObjectKeys2: " + figure2RelatedObjectKeys);
         matchedROs.addAll(findMatchedROsInFigures(figure1RelatedObjectKeys, figure2RelatedObjectKeys));
 
