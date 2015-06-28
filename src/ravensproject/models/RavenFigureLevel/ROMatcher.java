@@ -156,10 +156,10 @@ public class ROMatcher {
             ROSpatialDescCompositeKey key1 = figure1RelatedObjectKeys.get(i);
             ROSpatialDescCompositeKey key2 = figure2RelatedObjectKeys.get(i);
             if (key1.getSpatialDesc().equals(key2.getSpatialDesc()) && figure1Spatial.relatedRavensObjects.get(key1).size() == (figure2Spatial.relatedRavensObjects.get(key2).size())) {
-                System.out.println("found matched RavensObjects: Figure 1 has " + key1.toString() + ", Figure 2 has " + key2.toString());
+              //  System.out.println("found matched RavensObjects: Figure 1 has " + key1.toString() + ", Figure 2 has " + key2.toString());
                 foundMatches.add(new CorrespondingRO(this.ravensFigure1, key1.getRavensObject().getName(), this.ravensFigure2, key2.getRavensObject().getName()));
             } else {
-                System.out.println("unmatched RavensObjects: Figure has " + key1.toString() + ", Figure 2 has " + key2.toString());
+              //  System.out.println("unmatched RavensObjects: Figure has " + key1.toString() + ", Figure 2 has " + key2.toString());
             }
         }
 

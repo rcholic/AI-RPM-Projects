@@ -5,8 +5,8 @@ package ravensproject;
 //import java.io.File;
 //import javax.imageio.ImageIO;
 
+import ravensproject.models.RavenFigureLevel.ROMatcher;
 import ravensproject.models.RavenObjectLevel.CorrespondingRO;
-import ravensproject.models.RavenObjectLevel.ROMatch;
 
 import java.util.Map;
 
@@ -68,7 +68,7 @@ public class Agent {
         RavensFigure figureA = figuresMap.get("A");
         RavensFigure figureB = figuresMap.get("B");
         System.out.println("identying the matched RavensObject between Figures A and B: ");
-        ROMatch match = new ROMatch(figureA, figureB);
+        ROMatcher match = new ROMatcher(figureA, figureB);
 
         for (CorrespondingRO cr : match.getMatchedROs()) {
             System.out.println("matched: in Figure A: " + cr.getRavensObject1().getName() + " --- in Figure B:"
