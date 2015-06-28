@@ -3,6 +3,7 @@ package ravensproject.models.RavenFigureLevel;
 import ravensproject.RavensFigure;
 import ravensproject.RavensObject;
 import ravensproject.models.RavenObjectLevel.ROSpatialDescCompositeKey;
+import ravensproject.models.RavenObjectLevel.SpatialAttrFactory;
 
 import java.util.*;
 
@@ -29,21 +30,8 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
 
     //populate the spatialAttributes and oppsotieAttributes with prior knowledge
     static {
-        spatialAttributes.add("above");
-        spatialAttributes.add("below");
-        spatialAttributes.add("left-of");
-        spatialAttributes.add("right-of");
-        spatialAttributes.add("inside");
-        spatialAttributes.add("outside");
-        spatialAttributes.add("overlaps");
-
-        oppositeAttributes.put("above", "below");
-        oppositeAttributes.put("below", "above");
-        oppositeAttributes.put("left-of", "right-of");
-        oppositeAttributes.put("right-of", "left-of");
-        oppositeAttributes.put("overlaps", "overlaps");
-        oppositeAttributes.put("inside", "outside");
-        oppositeAttributes.put("outside", "inside");
+        spatialAttributes = SpatialAttrFactory.getSpatialAttributes();
+        oppositeAttributes = SpatialAttrFactory.getOppositeAttributes();
     }
 
     public ROSpatialRelationshipsInRF() {
@@ -100,6 +88,7 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
                         String oppositeSpatialDesc = oppositeAttributes.get(spatialDesc);
                         //put the opposite relation RO into the map
 
+                        /*
                         if (oppositeSpatialDesc != null) {
                             for (String oppositeROName : associatedRavensObjectNames) {
                                 RavensObject oppositeRO = this.ravensFigure.getObjects().get(oppositeROName);
@@ -113,6 +102,7 @@ public class ROSpatialRelationshipsInRF implements Comparable<ROSpatialRelations
                                 this.relatedRavensObjects.put(ROSpatialDescCompositeKey, associatedRavensObjectNames);
                             }
                         }
+                        */
                     }
                 } else {
                     //add ro to unrelated RavensObjects (spatially)

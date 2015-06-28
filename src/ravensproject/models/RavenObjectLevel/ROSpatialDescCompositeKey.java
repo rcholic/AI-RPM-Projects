@@ -1,11 +1,9 @@
 package ravensproject.models.RavenObjectLevel;
 
 import ravensproject.RavensObject;
+import ravensproject.models.RavenFigureLevel.ROSpatialRelationshipsInRF;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * for generating a composite key for describing the spatial relationship between a
@@ -13,7 +11,8 @@ import java.util.Map;
  *
  * e.g. 'RavensObject A' "above" RavensObject B
  */
-public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompositeKey> {
+public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompositeKey>,
+        Comparator<ROSpatialDescCompositeKey> {
     private RavensObject ravensObject;
     private String spatialDesc;
     private String ravensObjectName;
@@ -31,7 +30,23 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
         this.spatialDesc = spatialDesc;
     }
 
+    /**
+     * for custom comparator - sort by both object names and spatialDesc
+     * @param o1
+     * @param o2
+     * @return
+     */
+    @Override
+    public int compare(ROSpatialDescCompositeKey o1, ROSpatialDescCompositeKey o2) {
 
+        return (o1.ravensObjectName + o1.spatialDesc).compareTo(o2.ravensObjectName + o2.spatialDesc);
+    }
+
+    /**
+     * for sorting by objectName only
+     * @param that
+     * @return
+     */
     @Override
     public int compareTo(ROSpatialDescCompositeKey that) {
         return this.ravensObject.getName().compareTo(that.ravensObject.getName());
@@ -79,8 +94,8 @@ public class ROSpatialDescCompositeKey implements Comparable<ROSpatialDescCompos
         return spatialDesc;
     }
 
-
     public static void main(String[] args) {
+        //some tests
         ROSpatialDescCompositeKey key1 = new ROSpatialDescCompositeKey("object1", "above");
         ROSpatialDescCompositeKey key2 = new ROSpatialDescCompositeKey("object1", "left-of");
         ROSpatialDescCompositeKey key3 = new ROSpatialDescCompositeKey("object3", "below");

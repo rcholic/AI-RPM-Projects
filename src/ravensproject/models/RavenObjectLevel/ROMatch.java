@@ -57,14 +57,14 @@ public class ROMatch {
         //convert the keySet to List for better iteration
         List<ROSpatialDescCompositeKey> figure1RelatedObjectKeys = new ArrayList<>();
         figure1RelatedObjectKeys.addAll(figure1Spatial.relatedRavensObjects.keySet()); //convert set to List
-        Collections.sort(figure1RelatedObjectKeys);
+        Collections.sort(figure1RelatedObjectKeys, new ROSpatialDescCompositeKey());
         System.out.println("spatially related ObjectKeys1: " + figure1RelatedObjectKeys);
 
         List<ROSpatialDescCompositeKey> figure2RelatedObjectKeys = new ArrayList<>();
         figure2RelatedObjectKeys.addAll(figure2Spatial.relatedRavensObjects.keySet()); //convert set to List
-        Collections.sort(figure2RelatedObjectKeys);
+        Collections.sort(figure2RelatedObjectKeys, new ROSpatialDescCompositeKey());
         System.out.println("spatially related ObjectKeys2: " + figure2RelatedObjectKeys);
-        matchedROs.addAll(findMatchedROsInFigures(figure1RelatedObjectKeys, this.ravensFigure1, figure2RelatedObjectKeys, this.ravensFigure2));
+        matchedROs.addAll(findMatchedROsInFigures(figure1RelatedObjectKeys, figure2RelatedObjectKeys));
 
         return matchedROs;
     }
@@ -142,9 +142,7 @@ public class ROMatch {
      * @return List<CorrespondingRO>
      */
     private List<CorrespondingRO> findMatchedROsInFigures(List<ROSpatialDescCompositeKey> figure1RelatedObjectKeys,
-                                                          RavensFigure ravensFigure1,
-                                                          List<ROSpatialDescCompositeKey> figure2RelatedObjectKeys,
-                                                          RavensFigure ravensFigure2
+                                                          List<ROSpatialDescCompositeKey> figure2RelatedObjectKeys
                                                           ) {
 
         List<CorrespondingRO> foundMatches = new ArrayList<>();
@@ -153,9 +151,11 @@ public class ROMatch {
         for (int i = 0; i < shortestLength; i++) {
             ROSpatialDescCompositeKey key1 = figure1RelatedObjectKeys.get(i);
             ROSpatialDescCompositeKey key2 = figure2RelatedObjectKeys.get(i);
-            if (key1.equals(key2)) {
+            if (key1.getSpatialDesc().equals(key2.getSpatialDesc()) && figure1Spatial.relatedRavensObjects.get(key1).size() == (figure2Spatial.relatedRavensObjects.get(key2).size())) {
                 System.out.println("found matched RavensObjects: Figure 1 has " + key1.toString() + ", Figure 2 has " + key2.toString());
-                foundMatches.add(new CorrespondingRO(ravensFigure1, key1.getRavensObject().getName(), ravensFigure2, key2.getRavensObject().getName()));
+                foundMatches.add(new CorrespondingRO(this.ravensFigure1, key1.getRavensObject().getName(), this.ravensFigure2, key2.getRavensObject().getName()));
+            } else {
+                System.out.println("unmatched RavensObjects: Figure has " + key1.toString() + ", Figure 2 has " + key2.toString());
             }
         }
 
