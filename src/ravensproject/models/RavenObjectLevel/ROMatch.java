@@ -19,7 +19,8 @@ public class ROMatch {
     private ROSpatialRelationshipsInRF figure1Spatial;
     private ROSpatialRelationshipsInRF figure2Spatial;
     public Set<CorrespondingRO> matchedROs;
-    public List<RavensObject> unmatchedROs;
+    // public List<RavensObject> unmatchedROs;
+    public Set<RavensFigObjNameComposite> unmatchedROs;
 
     public ROMatch() {}
 
@@ -30,7 +31,8 @@ public class ROMatch {
         this.figure2Spatial = new ROSpatialRelationshipsInRF(this.ravensFigure2);
 
         matchedROs = new HashSet<>();
-        unmatchedROs = new ArrayList<RavensObject>();
+//        unmatchedROs = new ArrayList<RavensObject>();
+        unmatchedROs = new HashSet<>();
     }
 
     /**
@@ -82,12 +84,15 @@ public class ROMatch {
                 } else {
                     //the unmatchedObject must in the RavensFigure that has more RavensObjects -- assumption!
                     RavensObject unmatchedObject = null;
+                    RavensFigure ownerRF = null;
                     if (this.ravensFigure1.getObjects().size() > this.ravensFigure2.getObjects().size()) {
                         unmatchedObject = key1.getRavensObject();
-                    } else if (this.ravensFigure1.getObjects().size() < this.ravensFigure2.getObjects().size()) {
+                        ownerRF = this.ravensFigure1;
+                    } else if (this.ravensFigure1.getObjects().size() <= this.ravensFigure2.getObjects().size()) {
                         unmatchedObject = key2.getRavensObject();
+                        ownerRF = this.ravensFigure2;
                     }
-                    unmatchedROs.add(unmatchedObject);
+                    unmatchedROs.add(new RavensFigObjNameComposite(ownerRF, unmatchedObject.getName()));
                 }
             }
 
@@ -107,7 +112,30 @@ public class ROMatch {
      *
      * @return
      */
-    public List<RavensObject> getUnmatchedROs() {
+    public Set<RavensFigObjNameComposite> getUnmatchedROs() {
+        Set<CorrespondingRO> matchedObjects = getMatchedROs();
+        List<String> objectNamesInFig1 = new ArrayList(this.ravensFigure1.getObjects().keySet());
+        List<String> objectNamesInFig2 = new ArrayList(this.ravensFigure2.getObjects().keySet());
+        System.out.println("total num of object names in Fig1: " + objectNamesInFig1.size());
+        System.out.println("total num of object name in Fig2: " + objectNamesInFig2.size());
+
+        //remove matched RavensObjects, leave unmatched ROs
+        for (CorrespondingRO cro : matchedObjects) {
+            String object1Name = cro.getRavensObject1().getName();
+            String object2Name = cro.getRavensObject2().getName();
+            objectNamesInFig1.remove(object1Name);
+            objectNamesInFig2.remove(object2Name);
+        }
+
+        for (String name : objectNamesInFig1) {
+            unmatchedROs.add(new RavensFigObjNameComposite(this.ravensFigure1, name));
+            System.out.println(name);
+        }
+        for (String name : objectNamesInFig2) {
+            System.out.println(name);
+            unmatchedROs.add(new RavensFigObjNameComposite(this.ravensFigure2, name));
+        }
+
         return unmatchedROs;
     }
 
