@@ -22,9 +22,9 @@ public class ROMatcher {
 
     private ROSpatialRelationshipsInRF figure1Spatial;
     private ROSpatialRelationshipsInRF figure2Spatial;
-    public Set<CorrespondingRO> matchedROs;
+    private Set<CorrespondingRO> matchedROs;
     // public List<RavensObject> unmatchedROs;
-    public Set<RavensFigObjNameComposite> unmatchedROs;
+    private Set<RavensFigObjNameComposite> unmatchedROs;
 
     public ROMatcher() {}
 

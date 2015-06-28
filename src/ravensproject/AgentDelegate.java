@@ -4,6 +4,7 @@ import ravensproject.models.RavenFigureLevel.RFTransformation;
 import ravensproject.models.RavenObjectLevel.ROTransformation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,10 +85,51 @@ public class AgentDelegate {
 
     public int solve3x3RPM(RavensProblem ravensProblem) {
         initTransformContainers();
-        for (int i = 0; i < givenFigureNames.size() - 1; i++) {
-            String figureName = givenFigureNames.get(i);
-            ravensFigure1 = ravensProblem.getFigures().get(givenFigureNames.get(i));
+//        int turnFlag = 0;
+//        for (int i = 0; i < givenFigureNames.size() - 1; i++) {
+//            String figureName = givenFigureNames.get(i);
+//            ravensFigure1 = ravensProblem.getFigures().get(givenFigureNames.get(i));
+//
+//            ravensFigure2 = ravensProblem.getFigures().get(givenFigureNames.get(i+1));
+//            turnFlag++;
+//
+//        }
+        ravensFigure1 = ravensProblem.getFigures().get("A");
+        ravensFigure2 = ravensProblem.getFigures().get("B");
+        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+        numKnownTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
 
+        ravensFigure1 = ravensProblem.getFigures().get("B");
+        ravensFigure2 = ravensProblem.getFigures().get("C");
+        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+
+        ravensFigure1 = ravensProblem.getFigures().get("D");
+        ravensFigure2 = ravensProblem.getFigures().get("E");
+        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+
+        ravensFigure1 = ravensProblem.getFigures().get("E");
+        ravensFigure2 = ravensProblem.getFigures().get("F");
+        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+
+        ravensFigure1 = ravensProblem.getFigures().get("G");
+        ravensFigure2 = ravensProblem.getFigures().get("H");
+        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+
+
+        //NOW check the answer figures
+        ravensFigure1 = ravensFigure2;
+        Collections.sort(numAnswerTransformations);
+
+        for (int i = 1; i <= 6; i++) {
+            ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
+            rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
+            if (numAnswerTransformations.get(0) >= rfTransformation.compileROTransformationsInMatchedObjects().size()) {
+                this.answerChoice = i;
+            }
         }
 
         return this.answerChoice;
@@ -99,6 +141,18 @@ public class AgentDelegate {
         this.numAnswerTransformations = new ArrayList<>();
         this.transformationsWithAnswerFigs = new ArrayList<>();
         this.answerChoice = 6; //initialized to 6
+    }
+
+    public static void main(String[] args) {
+        List<Integer> myList = new ArrayList<>();
+        myList.add(1000);
+        myList.add(10);
+        myList.add(-10);
+        myList.add(-9);
+        myList.add(0);
+        System.out.println(myList);
+        Collections.sort(myList);
+        System.out.println(myList);
     }
 
 }

@@ -5,6 +5,7 @@ import ravensproject.RavensObject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by guoliangwang on 6/27/15.
@@ -18,6 +19,9 @@ import java.util.List;
  * Comparing order: from left to right (e.g. Figure A compared to Figure B)
  * or from top to bottom (e.g. Figure A compared to Figure C if 2x2 or
  * Figure A compared to Figure D if 3x3
+ *
+ * ??? on a second thought, I am not sure what I should do to better use this model ???!!
+ * ??? or should I make it a Utility or Factory tool ???!!!
  *
  */
 public class ROTransformation implements Comparator<ROTransformation> {
@@ -56,6 +60,30 @@ public class ROTransformation implements Comparator<ROTransformation> {
                 this.roSizeChange.equals(that.roSizeChange) &&
                 this.roFillChange.equals(that.roSizeChange);
     }
+
+    /**
+     * get all transformations (what is changed) between the two RavensObjects
+     * @return List<ROTransformationInterface>
+     */
+    public List<ROTransformationInterface> getAllTransformations() {
+        List<ROTransformationInterface> whatsChanged = new ArrayList<>();
+
+        if (this.roAngleChange.getAngleDiff() != 0) {
+            whatsChanged.add(this.roAngleChange);
+        }
+        if (this.roShapeTransformation.isShapeChanged()) {
+            whatsChanged.add(this.roShapeTransformation);
+        }
+        if (this.roSizeChange.sizeDifference() != 0) {
+            whatsChanged.add(this.roSizeChange);
+        }
+        if (this.roFillChange.isFillChanged()) {
+            whatsChanged.add(this.roFillChange);
+        }
+
+        return whatsChanged;
+    }
+
 
     @Override
     public int compare(ROTransformation o1, ROTransformation o2) {
