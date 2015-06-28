@@ -5,8 +5,10 @@ package ravensproject;
 //import java.io.File;
 //import javax.imageio.ImageIO;
 
+import ravensproject.models.RavenFigureLevel.RFTransformation;
 import ravensproject.models.RavenFigureLevel.ROMatcher;
 import ravensproject.models.RavenObjectLevel.CorrespondingRO;
+import ravensproject.models.RavenObjectLevel.ROTransformationInterface;
 
 import java.util.Map;
 
@@ -70,11 +72,21 @@ public class Agent {
         System.out.println("identying the matched RavensObject between Figures A and B: ");
         ROMatcher match = new ROMatcher(figureA, figureB);
 
+        /*
         for (CorrespondingRO cr : match.getMatchedROs()) {
             System.out.println("matched: in Figure A: " + cr.getRavensObject1().getName() + " --- in Figure B:"
                     + cr.getRavensObject2().getName());
             System.out.println("************************************");
         }
+        */
+
+        RFTransformation rfTransformation = new RFTransformation(figureA, figureB);
+
+        for (ROTransformationInterface roTransformation : rfTransformation.compileROTransformationsInMatchedObjects()) {
+            System.out.println("attributes transformed: " + roTransformation.getAttributeKeyName());
+        }
+
+        System.out.println("compiled Transformations of these two figures: " + rfTransformation.compileROTransformationsInMatchedObjects().size());
 
         System.out.println("----------------next RPM-----------------------------------------");
 

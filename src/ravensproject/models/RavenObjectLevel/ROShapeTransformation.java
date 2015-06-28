@@ -69,6 +69,14 @@ public class ROShapeTransformation implements ROTransformationInterface {
                 ", toShape: " + this.toShape;
     }
 
+    /**
+     * Check if the shape has changed
+     * @return, true for "YES", false for "NO"
+     */
+    public boolean isShapeChanged() {
+        return !this.fromShape.equals(this.toShape);
+    }
+
 
     //getters below
 
