@@ -15,7 +15,10 @@ public class AgentDelegate {
     public int answerChoice;
     private RavensFigure ravensFigure1;
     private RavensFigure ravensFigure2;
-    private RFTransformation rfTransformation;
+    private RavensFigure ravensFigure3; //for 3x3 RPM
+    private RFTransformation rfTransformation1;
+    private RFTransformation rfTransformation2;
+    private RFTransformation rfTransformation3; //for 3x3 RPM
 
     public final static List<String> givenFigureNames = new ArrayList<>();
     public final static List<String> answerFigureNames = new ArrayList<>();
@@ -68,14 +71,19 @@ public class AgentDelegate {
         initTransformContainers();
         ravensFigure1 = ravensProblem.getFigures().get("A");
         ravensFigure2 = ravensProblem.getFigures().get("B");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        int numKnownCompiledTransforms = rfTransformation.compileROTransformationsInMatchedObjects().size();
+        rfTransformation1 = new RFTransformation(ravensFigure1, ravensFigure2);
+        int numKnownCompiledTransforms = rfTransformation1.compileROTransformationsInMatchedObjects().size();
 
         ravensFigure1 = ravensProblem.getFigures().get("C");
         for (int i = 1; i <= 6; i++) {
             ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
-            rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-            if (numKnownCompiledTransforms >= rfTransformation.compileROTransformationsInMatchedObjects().size()) {
+            rfTransformation2 = new RFTransformation(ravensFigure1, ravensFigure2);
+            if (rfTransformation1.equals(rfTransformation2)) {
+                System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
+                this.answerChoice = i;
+                break;
+            }
+            if (numKnownCompiledTransforms >= rfTransformation2.compileROTransformationsInMatchedObjects().size()) {
                 this.answerChoice = i;
             }
         }
@@ -94,45 +102,121 @@ public class AgentDelegate {
 //            turnFlag++;
 //
 //        }
+
+
+
+
+        List<List<RFTransformation>> transformationInFirstTwoRows = new ArrayList<>();
+        List<RFTransformation> transformationInFirstRow = new ArrayList<RFTransformation>();
+        List<RFTransformation> transformationInSecondRow = new ArrayList<RFTransformation>();
+        List<RFTransformation> transformationInThirdRow = new ArrayList<RFTransformation>();
         ravensFigure1 = ravensProblem.getFigures().get("A");
         ravensFigure2 = ravensProblem.getFigures().get("B");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        numKnownTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+        ravensFigure3 = ravensProblem.getFigures().get("C");
+        rfTransformation1 = new RFTransformation(ravensFigure1, ravensFigure2);
+        int numTrans = rfTransformation1.compileROTransformationsInMatchedObjects().size();
 
-        ravensFigure1 = ravensProblem.getFigures().get("B");
-        ravensFigure2 = ravensProblem.getFigures().get("C");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+        rfTransformation2 = new RFTransformation(ravensFigure2, ravensFigure3);
+        numTrans += rfTransformation2.compileROTransformationsInMatchedObjects().size();
+
+        rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
+        numKnownTransformations.add(numTrans + rfTransformation3.compileROTransformationsInMatchedObjects().size());
+        transformationInFirstRow.add(rfTransformation1);
+        transformationInFirstRow.add(rfTransformation2);
+        transformationInFirstRow.add(rfTransformation3);
+        transformationInFirstTwoRows.add(transformationInFirstRow);
+
 
         ravensFigure1 = ravensProblem.getFigures().get("D");
         ravensFigure2 = ravensProblem.getFigures().get("E");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+        ravensFigure3 = ravensProblem.getFigures().get("F");
+        rfTransformation1 = new RFTransformation(ravensFigure1, ravensFigure2);
+        numTrans = rfTransformation1.compileROTransformationsInMatchedObjects().size();
 
-        ravensFigure1 = ravensProblem.getFigures().get("E");
-        ravensFigure2 = ravensProblem.getFigures().get("F");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+        rfTransformation2 = new RFTransformation(ravensFigure2, ravensFigure3);
+        numTrans += rfTransformation2.compileROTransformationsInMatchedObjects().size();
+
+        rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
+        numKnownTransformations.add(numTrans + rfTransformation3.compileROTransformationsInMatchedObjects().size());
+        transformationInSecondRow.add(rfTransformation1);
+        transformationInSecondRow.add(rfTransformation2);
+        transformationInSecondRow.add(rfTransformation3);
+        transformationInFirstTwoRows.add(transformationInSecondRow);
+
 
         ravensFigure1 = ravensProblem.getFigures().get("G");
         ravensFigure2 = ravensProblem.getFigures().get("H");
-        rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-        numAnswerTransformations.add(rfTransformation.compileROTransformationsInMatchedObjects().size());
+        rfTransformation1 = new RFTransformation(ravensFigure1, ravensFigure2);
+        numTrans = rfTransformation1.compileROTransformationsInMatchedObjects().size();
+        numKnownTransformations.add(rfTransformation1.compileROTransformationsInMatchedObjects().size());
+
+        /*
+        rfTransformation2 = new RFTransformation(ravensFigure2, ravensFigure3);
+        numAnswerTransformations.add(rfTransformation2.compileROTransformationsInMatchedObjects().size());
+
+        rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
+        numAnswerTransformations.add(rfTransformation3.compileROTransformationsInMatchedObjects().size());
+        */
+        transformationInThirdRow.add(rfTransformation1);
+        transformationInFirstTwoRows.add(transformationInFirstRow);
 
 
         //NOW check the answer figures
-        ravensFigure1 = ravensFigure2;
-        Collections.sort(numAnswerTransformations);
+        Collections.sort(numKnownTransformations);
+        int transDiff = Integer.MAX_VALUE;
 
-        for (int i = 1; i <= 6; i++) {
-            ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
-            rfTransformation = new RFTransformation(ravensFigure1, ravensFigure2);
-            if (numAnswerTransformations.get(0) >= rfTransformation.compileROTransformationsInMatchedObjects().size()) {
+        for (int i = 1; i <= 8; i++) {
+            ravensFigure3 = ravensProblem.getFigures().get(Integer.toString(i));
+            rfTransformation2 = new RFTransformation(ravensFigure2, ravensFigure3);
+            int curNumTrans = rfTransformation2.compileROTransformationsInMatchedObjects().size();
+            transformationInThirdRow.add(1, rfTransformation2);
+            rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
+            curNumTrans += rfTransformation3.compileROTransformationsInMatchedObjects().size();
+            transformationInThirdRow.add(2, rfTransformation3);
+
+            //compute the differences in transformations row-wise
+            int curDiff = compareRowTransformations(transformationInFirstTwoRows, transformationInThirdRow);
+            if (curDiff == 0) {
+                System.out.println("in 3x3, found identical transformation!");
+                this.answerChoice = i;
+                break;
+            }
+
+            if (transDiff > curDiff) {
+                this.answerChoice = i;
+                transDiff = curDiff;
+            }
+
+            /*
+            if (numKnownTransformations.get(0) == numTrans + curNumTrans) {
                 this.answerChoice = i;
             }
+            */
+
+            /*
+            if (numAnswerTransformations.get(0) >= rfTransformation2.compileROTransformationsInMatchedObjects().size()) {
+                this.answerChoice = i;
+            }
+            */
         }
 
         return this.answerChoice;
+    }
+
+    private int compareRowTransformations(List<List<RFTransformation>> firstTwoRowTransforms, List<RFTransformation> thirdRowTransforms) {
+        int diff = 0;
+        for (int i = 0; i < firstTwoRowTransforms.size(); i++) {
+            List<RFTransformation> curRowTransforms = firstTwoRowTransforms.get(i);
+            for (int j = 1; j < 3; j++) {
+                RFTransformation upperRowTrans = curRowTransforms.get(j);
+                RFTransformation thirdRowTrans = thirdRowTransforms.get(j);
+                if (!upperRowTrans.equals(thirdRowTrans)) {
+                    diff++;
+                }
+            }
+        }
+
+        return diff;
     }
 
 
@@ -150,6 +234,7 @@ public class AgentDelegate {
         myList.add(-10);
         myList.add(-9);
         myList.add(0);
+//        myList.remove(10);
         System.out.println(myList);
         Collections.sort(myList);
         System.out.println(myList);

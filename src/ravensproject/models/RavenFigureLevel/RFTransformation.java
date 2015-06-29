@@ -25,6 +25,7 @@ public class RFTransformation {
     private RavensFigure ravensFigure1;
     private RavensFigure ravensFigure2;
     private ROMatcher roMatcher;
+    private int numDiffObjects;
 
     public RFTransformation() {}
 
@@ -32,6 +33,7 @@ public class RFTransformation {
         this.ravensFigure1 = ravensFigure1;
         this.ravensFigure2 = ravensFigure2;
         this.roMatcher = new ROMatcher(ravensFigure1, ravensFigure2);
+        this.numDiffObjects = this.ravensFigure2.getObjects().size() - this.ravensFigure1.getObjects().size();
     }
 
     /**
@@ -41,7 +43,7 @@ public class RFTransformation {
      * @return int
      */
     public int numObjectsDiff() {
-        return ravensFigure2.getObjects().size() - ravensFigure1.getObjects().size();
+        return this.numDiffObjects;
     }
 
     public Set<RavensFigObjNameComposite> getUnmatchedRavensObjects() {
@@ -69,6 +71,38 @@ public class RFTransformation {
         }
 
         return compiledObjTransfomsBetweenFigures;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof RFTransformation)) {
+            return false;
+        }
+        RFTransformation that = (RFTransformation) o;
+        if (that.numDiffObjects != this.numDiffObjects) {
+            return false;
+        }
+        if (this.compileROTransformationsInMatchedObjects().size() != that.compileROTransformationsInMatchedObjects().size()) {
+            return false;
+        }
+        return this.matchedRavensObjects().size() == that.matchedRavensObjects().size();
+    }
+
+    public int scoreDifferenceInTransformation(RFTransformation transformation) {
+        //TODO: score the differences between Figure Transformations
+        List<ROTransformationInterface> anotherCompiledTransForm = transformation.compileROTransformationsInMatchedObjects();
+        int score = 0;
+        int shorterLength = Math.min(anotherCompiledTransForm.size(), this.compileROTransformationsInMatchedObjects().size());
+        for (int i = 0; i < shorterLength; i++) {
+            ROTransformationInterface transform1 = anotherCompiledTransForm.get(i);
+            ROTransformationInterface transform2 = this.compileROTransformationsInMatchedObjects().get(i);
+        }
+
+
+        return score;
     }
 
 

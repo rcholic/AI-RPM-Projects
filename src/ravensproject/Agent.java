@@ -64,7 +64,8 @@ public class Agent {
      */
     public int Solve(RavensProblem problem) {
 
-        System.out.println("solving problem: " + problem.getName());
+        System.out.print("solving problem: " + problem.getName());
+        final long startTime = System.nanoTime();
 
         /*
         Map<String, RavensFigure> figuresMap = problem.getFigures();
@@ -105,6 +106,8 @@ public class Agent {
 
         AgentDelegate delegate = new AgentDelegate(problem);
         delegate.solve();
+        final long duration = System.nanoTime() - startTime;
+        System.out.println(", time used: " + ((double)duration/1000000) + " ms");
         return delegate.answerChoice;
 
 //        return -1;

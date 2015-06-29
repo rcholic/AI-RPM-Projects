@@ -141,7 +141,6 @@ public class ROTransformation implements Comparator<ROTransformation> {
         return ravensObject2;
     }
 
-
     public ROShapeTransformation getRoShapeTransformation() {
         return roShapeTransformation;
     }
