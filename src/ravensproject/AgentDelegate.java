@@ -79,7 +79,7 @@ public class AgentDelegate {
             ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
             rfTransformation2 = new RFTransformation(ravensFigure1, ravensFigure2);
             if (rfTransformation1.equals(rfTransformation2)) {
-                System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
+               // System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
                 this.answerChoice = i;
                 break;
             }
@@ -177,7 +177,7 @@ public class AgentDelegate {
             //compute the differences in transformations row-wise
             int curDiff = compareRowTransformations(transformationInFirstTwoRows, transformationInThirdRow);
             if (curDiff == 0) {
-                System.out.println("in 3x3, found identical transformation!");
+               // System.out.println("in 3x3, found identical transformation!");
                 this.answerChoice = i;
                 break;
             }
