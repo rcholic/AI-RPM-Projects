@@ -91,7 +91,12 @@ public class RFTransformation {
         return this.matchedRavensObjects().size() == that.matchedRavensObjects().size();
     }
 
-    public int scoreDifferenceInTransformation(RFTransformation transformation) {
+    /**
+     * Score the transformation at the matched object level between two Raven's Figures
+     * @param transformation
+     * @return int
+     */
+    public int scoreRFTransformations(RFTransformation transformation) {
         //TODO: score the differences between Figure Transformations
         List<ROTransformationInterface> anotherCompiledTransForm = transformation.compileROTransformationsInMatchedObjects();
         int score = 0;
@@ -99,8 +104,27 @@ public class RFTransformation {
         for (int i = 0; i < shorterLength; i++) {
             ROTransformationInterface transform1 = anotherCompiledTransForm.get(i);
             ROTransformationInterface transform2 = this.compileROTransformationsInMatchedObjects().get(i);
+
+            if (transform1.getAttributeKeyName().equals(transform2.getAttributeKeyName())) {
+                score += 1; //if the key (e.g. size) are the same, increment the score by 1
+                if (transform1.equals(transform2)) {
+                    score += 2; // increment by 2
+                }
+            }
         }
 
+        if (this.numDiffObjects == transformation.numDiffObjects) {
+            score += 5;  // number of different objects are the same, increment by 5
+        }
+        /*
+        else {
+            score += Math.abs(this.numDiffObjects - transformation.numDiffObjects); // make sense??
+        }
+        */
+
+        if (this.getUnmatchedRavensObjects().size() == transformation.getUnmatchedRavensObjects().size()) {
+            score += 4;
+        }
 
         return score;
     }
