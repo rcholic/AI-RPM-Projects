@@ -85,8 +85,8 @@ public class ROMatcher {
         Set<CorrespondingRO> matchedObjects = getMatchedROs();
         List<String> objectNamesInFig1 = new ArrayList(this.ravensFigure1.getObjects().keySet());
         List<String> objectNamesInFig2 = new ArrayList(this.ravensFigure2.getObjects().keySet());
-        System.out.println("total num of object names in Fig1: " + objectNamesInFig1.size());
-        System.out.println("total num of object name in Fig2: " + objectNamesInFig2.size());
+        //System.out.println("total num of object names in Fig1: " + objectNamesInFig1.size());
+        //System.out.println("total num of object name in Fig2: " + objectNamesInFig2.size());
 
         //remove matched RavensObjects, leave unmatched ROs
         for (CorrespondingRO cro : matchedObjects) {

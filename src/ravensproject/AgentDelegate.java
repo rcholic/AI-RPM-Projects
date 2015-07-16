@@ -25,7 +25,8 @@ public class AgentDelegate {
 
 
     //for storing the number of transformations from the given figures
-    private List<Integer> rfTransformationScores;
+    private int[] rfTransformationScores;
+    // private List<Integer> answerRFTransformationScores;
 
     //for storing the list of ROTransformation from Fig C and each answer Figure
     //or the transformation between Fig H and each answer Figure
@@ -58,9 +59,10 @@ public class AgentDelegate {
     public void solve() {
         // int answerChoice = 6;
 
-        if (this.ravensProblem.getProblemType().contains("2x2")) {
+        System.out.println("solving problem: " + this.ravensProblem.getName());
+        if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVerbal()) {
             solve2x2RPM(ravensProblem);
-        } else if (this.ravensProblem.getProblemType().contains("3x3")) {
+        } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVerbal()) {
             solve3x3RPM(ravensProblem);
         }
 
@@ -80,18 +82,24 @@ public class AgentDelegate {
         for (int i = 1; i <= 6; i++) {
             ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
             rfTransformation2 = new RFTransformation(ravensFigure1, ravensFigure2);
+            /*
             if (rfTransformation1.equals(rfTransformation2)) {
-               // System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
+                System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
                 this.answerChoice = i;
                 break;
             } else {
+                */
                 int scoreCurrRFTransform = rfTransformation1.scoreRFTransformations(rfTransformation2);
                 if (scoreCurrRFTransform > maxRFTransformScore) {  //what if equal ?? -- how to break tie??
                     this.answerChoice = i;
                     maxRFTransformScore = scoreCurrRFTransform;
                 }
-            }
+            //}
         }
+
+        int correctAnswer = ravensProblem.checkAnswer(this.answerChoice);
+        System.out.println("answer correct? my answer: " + this.answerChoice + ", correct: " + correctAnswer +
+                " ?? " + (this.answerChoice == correctAnswer));
 
         return this.answerChoice;
     }
@@ -125,9 +133,9 @@ public class AgentDelegate {
         // numTrans += rfTransformation2.compileROTransformationsInMatchedObjects().size();
 
         rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
-        rfTransformationScores.add(rfTransformation1.scoreRFTransformations(rfTransformation2));
-        rfTransformationScores.add(rfTransformation2.scoreRFTransformations(rfTransformation3));
-        rfTransformationScores.add(rfTransformation1.scoreRFTransformations(rfTransformation3));
+        rfTransformationScores[0] = rfTransformation1.scoreRFTransformations(rfTransformation2);
+        rfTransformationScores[1] = rfTransformation2.scoreRFTransformations(rfTransformation3);
+        rfTransformationScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
 //        transformationInFirstRow.add(rfTransformation1);
 //        transformationInFirstRow.add(rfTransformation2);
 //        transformationInFirstRow.add(rfTransformation3);
@@ -145,9 +153,9 @@ public class AgentDelegate {
 
         rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
 
-        rfTransformationScores.add(rfTransformation1.scoreRFTransformations(rfTransformation2));
-        rfTransformationScores.add(rfTransformation2.scoreRFTransformations(rfTransformation3));
-        rfTransformationScores.add(rfTransformation1.scoreRFTransformations(rfTransformation3));
+        rfTransformationScores[3] = rfTransformation1.scoreRFTransformations(rfTransformation2);
+        rfTransformationScores[4] = rfTransformation2.scoreRFTransformations(rfTransformation3);
+        rfTransformationScores[5] = rfTransformation1.scoreRFTransformations(rfTransformation3);
 
 //        numKnownTransformations.add(numTrans + rfTransformation3.compileROTransformationsInMatchedObjects().size());
 //        transformationInSecondRow.add(rfTransformation1);
@@ -177,42 +185,49 @@ public class AgentDelegate {
 //        Collections.sort(numKnownTransformations);
 //        int transDiff = Integer.MAX_VALUE;
 
+        int[] answerTransformScores;
+        double similarityScore = 0;
         for (int i = 1; i <= 8; i++) {
+            answerTransformScores = new int[3];
             ravensFigure3 = ravensProblem.getFigures().get(Integer.toString(i));
             rfTransformation2 = new RFTransformation(ravensFigure2, ravensFigure3);
-            int curNumTrans = rfTransformation2.compileROTransformationsInMatchedObjects().size();
-            transformationInThirdRow.add(1, rfTransformation2);
             rfTransformation3 = new RFTransformation(ravensFigure1, ravensFigure3);
-            curNumTrans += rfTransformation3.compileROTransformationsInMatchedObjects().size();
-            transformationInThirdRow.add(2, rfTransformation3);
 
-            //compute the differences in transformations row-wise
-            int curDiff = compareRowTransformations(transformationInFirstTwoRows, transformationInThirdRow);
-            if (curDiff == 0) {
-               // System.out.println("in 3x3, found identical transformation!");
-                this.answerChoice = i;
-                break;
-            }
+            answerTransformScores[0] = rfTransformation1.scoreRFTransformations(rfTransformation2);
+            answerTransformScores[1] = rfTransformation2.scoreRFTransformations(rfTransformation3);
+            answerTransformScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
 
-            if (transDiff > curDiff) {
-                this.answerChoice = i;
-                transDiff = curDiff;
-            }
-
-            /*
-            if (numKnownTransformations.get(0) == numTrans + curNumTrans) {
+            if (similarityScore < getSimilarityScores(answerTransformScores)) {  //how to handle tie??
                 this.answerChoice = i;
             }
-            */
-
-            /*
-            if (numAnswerTransformations.get(0) >= rfTransformation2.compileROTransformationsInMatchedObjects().size()) {
-                this.answerChoice = i;
-            }
-            */
         }
 
+        int correctAnswer = ravensProblem.checkAnswer(this.answerChoice);
+        System.out.println("answer correct? my answer: " + this.answerChoice + ", correct: " + correctAnswer +
+                " ?? " + (this.answerChoice == correctAnswer));
+
         return this.answerChoice;
+    }
+
+    /**
+     *
+     * @param answerTransformScores int array of size 3
+     * @return
+     */
+    private double getSimilarityScores(int[] answerTransformScores) {
+        double simScore = 0;
+
+        for (int i = 0; i < 3; i++) {
+            int firstRowNum = rfTransformationScores[i];
+            int secondRowNum = rfTransformationScores[i + 3];
+            int thirdRowNum = answerTransformScores[i];
+
+            double tmpSimScore = Math.abs(firstRowNum - thirdRowNum) + Math.abs(secondRowNum - thirdRowNum);
+            simScore += (double) tmpSimScore / 2.0;
+        }
+
+
+        return simScore;
     }
 
     private int compareRowTransformations(List<List<RFTransformation>> firstTwoRowTransforms, List<RFTransformation> thirdRowTransforms) {
@@ -233,7 +248,8 @@ public class AgentDelegate {
 
 
     private void initTransformContainers() {
-        this.rfTransformationScores = new ArrayList<>();
+        this.rfTransformationScores = new int[6];
+       // this.answerRFTransformationScores = new ArrayList<>();
 //        this.numAnswerTransformations = new ArrayList<>();
         this.transformationsWithAnswerFigs = new ArrayList<>();
         this.answerChoice = 6; //initialized to 6
@@ -247,9 +263,9 @@ public class AgentDelegate {
         myList.add(-9);
         myList.add(0);
 //        myList.remove(10);
-        System.out.println(myList);
+      //  System.out.println(myList);
         Collections.sort(myList);
-        System.out.println(myList);
+      //  System.out.println(myList);
     }
 
 }

@@ -123,7 +123,7 @@ public class RFTransformation {
         */
 
         if (this.getUnmatchedRavensObjects().size() == transformation.getUnmatchedRavensObjects().size()) {
-            score += 4;
+            score += 3;
         }
 
         return score;
