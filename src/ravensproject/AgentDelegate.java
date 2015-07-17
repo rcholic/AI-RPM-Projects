@@ -210,25 +210,12 @@ public class AgentDelegate {
         return this.answerChoice;
     }
 
+
     /**
-     *
-     * @param answerTransformScores int array of size 3
+     * for 3x3 RPM, the similarity score is the smaller, the more similar it is!
+     * @param answerTransformScores
      * @return
      */
-//    private double getSimilarityScores(int[] answerTransformScores) {
-//        double simScore = 0;
-//
-//        for (int i = 0; i < 3; i++) {
-//            int firstRowNum = rfTransformationScores[i];
-//            int secondRowNum = rfTransformationScores[i + 3];
-//            int thirdRowNum = answerTransformScores[i];
-//
-//            double tmpSimScore = Math.abs(firstRowNum - thirdRowNum) + Math.abs(secondRowNum - thirdRowNum);
-//            simScore += (double) tmpSimScore / 2.0;
-//        }
-//        return simScore;
-//    }
-
     private int getSimilarityScores(int[] answerTransformScores) {
         int[] firstRowNum = new int[3];
         int[] secondRowNum = new int[3];
