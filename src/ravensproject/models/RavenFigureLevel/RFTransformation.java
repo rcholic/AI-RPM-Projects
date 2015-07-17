@@ -67,12 +67,36 @@ public class RFTransformation {
 
         for (CorrespondingRO cro : this.matchedRavensObjects()) {
             curROTransformation = new ROTransformation(cro.getRavensObject1(), cro.getRavensObject2());
-            compiledObjTransfomsBetweenFigures.addAll(curROTransformation.getAllTransformations());
+            compiledObjTransfomsBetweenFigures.addAll(curROTransformation.getChangedTransformations());
         }
 
         return compiledObjTransfomsBetweenFigures;
     }
 
+
+    /**
+     * unchanged transformations between objects (e.g. square to square)
+     * @return
+     */
+    public List<ROTransformationInterface> compileUnChangedROTransformationInMatchedObjects() {
+
+        ROTransformation curROTransformation = null;
+        List<ROTransformationInterface> compiledObjUnchangedTransfomsBetweenFigures = new ArrayList<>();
+
+        for (CorrespondingRO cro : this.matchedRavensObjects()) {
+            curROTransformation = new ROTransformation(cro.getRavensObject1(), cro.getRavensObject2());
+            compiledObjUnchangedTransfomsBetweenFigures.addAll(curROTransformation.getUnchangedTransformations());
+        }
+
+        return compiledObjUnchangedTransfomsBetweenFigures;
+
+    }
+
+    /**
+     * this may be flawed for equation!
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -88,6 +112,7 @@ public class RFTransformation {
         if (this.compileROTransformationsInMatchedObjects().size() != that.compileROTransformationsInMatchedObjects().size()) {
             return false;
         }
+
         return this.matchedRavensObjects().size() == that.matchedRavensObjects().size();
     }
 
@@ -101,20 +126,39 @@ public class RFTransformation {
         List<ROTransformationInterface> anotherCompiledTransForm = transformation.compileROTransformationsInMatchedObjects();
         int score = 0;
         int shorterLength = Math.min(anotherCompiledTransForm.size(), this.compileROTransformationsInMatchedObjects().size());
+        ROTransformationInterface transform1;
+        ROTransformationInterface transform2;
         for (int i = 0; i < shorterLength; i++) {
-            ROTransformationInterface transform1 = anotherCompiledTransForm.get(i);
-            ROTransformationInterface transform2 = this.compileROTransformationsInMatchedObjects().get(i);
+            transform1 = anotherCompiledTransForm.get(i);
+            transform2 = this.compileROTransformationsInMatchedObjects().get(i);
 
             if (transform1.getAttributeKeyName().equals(transform2.getAttributeKeyName())) {
-                score += 1; //if the key (e.g. size) are the same, increment the score by 1
+               // System.out.println("transforms key are the same: " + transform1.getAttributeKeyName());
+                // score += 1; //if the key (e.g. size) are the same, increment the score by 1
                 if (transform1.equals(transform2)) {
-                    score += 2; // increment by 2
+                 //   System.out.println("transform are equal in Changed: " + transform1.toString());
+                    score += 2; // increment by 4
+                }
+            }
+        }
+
+        List<ROTransformationInterface> anotherCompiledUnchangedTransform = transformation.compileUnChangedROTransformationInMatchedObjects();
+        shorterLength = Math.min(anotherCompiledUnchangedTransform.size(), this.compileUnChangedROTransformationInMatchedObjects().size());
+        for (int i = 0; i < shorterLength; i++) {
+            transform1 = anotherCompiledUnchangedTransform.get(i);
+            transform2 = this.compileUnChangedROTransformationInMatchedObjects().get(i);
+            if (transform1.getAttributeKeyName().equals(transform2.getAttributeKeyName())) {
+                score += 1;
+                if (transform1.equals(transform2)) {
+                 //   System.out.println("transform are equal in Unchanged: " + transform1.toString());
+                    score += 7;
                 }
             }
         }
 
         if (this.numDiffObjects == transformation.numDiffObjects) {
-            score += 5;  // number of different objects are the same, increment by 5
+          //  System.out.println("numDiffObjects are the same!");
+            score += 3;  // number of different objects are the same, increment by 5
         }
         /*
         else {
@@ -123,7 +167,8 @@ public class RFTransformation {
         */
 
         if (this.getUnmatchedRavensObjects().size() == transformation.getUnmatchedRavensObjects().size()) {
-            score += 3;
+          //  System.out.println("number of unmatched objects are the same!");
+            score += 4;
         }
 
         return score;

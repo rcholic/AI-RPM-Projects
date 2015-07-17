@@ -98,10 +98,10 @@ public class ROMatcher {
 
         for (String name : objectNamesInFig1) {
             unmatchedROs.add(new RavensFigObjNameComposite(this.ravensFigure1, name));
-            System.out.println(name);
+            //System.out.println(name);
         }
         for (String name : objectNamesInFig2) {
-            System.out.println(name);
+            //System.out.println(name);
             unmatchedROs.add(new RavensFigObjNameComposite(this.ravensFigure2, name));
         }
 

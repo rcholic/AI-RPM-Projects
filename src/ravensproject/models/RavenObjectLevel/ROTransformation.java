@@ -33,6 +33,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
     private ROSizeChange roSizeChange;
     private ROAngleChange roAngleChange;
     private ROFillChange roFillChange;
+    private ROAlignment roAlignment;
 
 
     public ROTransformation() {}
@@ -43,6 +44,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         this.roSizeChange = new ROSizeChange(ravensObject1, ravensObject2);
         this.roAngleChange = new ROAngleChange(ravensObject1, ravensObject2);
         this.roFillChange = new ROFillChange(ravensObject1, ravensObject2);
+        this.roAlignment = new ROAlignment(ravensObject1, ravensObject2);
     }
 
     @Override
@@ -58,14 +60,15 @@ public class ROTransformation implements Comparator<ROTransformation> {
         return this.roAngleChange.equals(that.roAngleChange) &&
                 this.roShapeTransformation.equals(that.roShapeTransformation) &&
                 this.roSizeChange.equals(that.roSizeChange) &&
-                this.roFillChange.equals(that.roSizeChange);
+                this.roFillChange.equals(that.roSizeChange) &&
+                this.roAlignment.equals(that.roAlignment);
     }
 
     /**
      * get all transformations (what is changed) between the two RavensObjects
      * @return List<ROTransformationInterface>
      */
-    public List<ROTransformationInterface> getAllTransformations() {
+    public List<ROTransformationInterface> getChangedTransformations() {
         List<ROTransformationInterface> whatsChanged = new ArrayList<>();
 
         if (this.roAngleChange.getAngleDiff() != 0) {
@@ -80,8 +83,37 @@ public class ROTransformation implements Comparator<ROTransformation> {
         if (this.roFillChange.isFillChanged()) {
             whatsChanged.add(this.roFillChange);
         }
+        if (this.roAlignment.isDifferent()) {
+            whatsChanged.add(this.roAngleChange);
+        }
 
         return whatsChanged;
+    }
+
+
+    /**
+     * List of unchanged transformations between the two objects
+     * @return
+     */
+    public List<ROTransformationInterface> getUnchangedTransformations() {
+        List<ROTransformationInterface> unchanged = new ArrayList<>();
+        if (this.roAngleChange.getAngleDiff() == 0) {
+            unchanged.add(this.roAngleChange);
+        }
+        if (!this.roShapeTransformation.isShapeChanged()) {
+            unchanged.add(this.roShapeTransformation);
+        }
+        if (this.roSizeChange.sizeDifference() == 0) {
+            unchanged.add(this.roSizeChange);
+        }
+        if (this.roFillChange.isFillChanged()) {
+            unchanged.add(this.roFillChange);
+        }
+        if (!this.roAlignment.isDifferent()) {
+            unchanged.add(this.roAlignment);
+        }
+
+        return unchanged;
     }
 
 
@@ -99,6 +131,12 @@ public class ROTransformation implements Comparator<ROTransformation> {
         }
         if (o1.roAngleChange.getAngleDiff() > o2.roAngleChange.getAngleDiff()) {
             return 1;
+        }
+        if (o1.roAlignment.isDifferent() == false && o2.roAlignment.isDifferent() == true) {
+            return 1;
+        }
+        if (o1.roAlignment.isDifferent() == true && o2.roAlignment.isDifferent() == false) {
+            return -1;
         }
 
         return 0;
@@ -128,6 +166,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         sb.append(this.roSizeChange.getAttributeKeyName() + " : " + this.roSizeChange.sizeDifference());
         sb.append(this.roShapeTransformation.getAttributeKeyName() + " : " + this.roShapeTransformation.toString());
         sb.append(this.roAngleChange.getAttributeKeyName() + " : " + this.roAngleChange.getAngleDiff());
+        sb.append(this.roAlignment.getAttributeKeyName() + " : " + this.roAlignment.isDifferent());
         return sb.toString();
     }
 
@@ -156,4 +195,6 @@ public class ROTransformation implements Comparator<ROTransformation> {
     public ROFillChange getRoFillChange() {
         return roFillChange;
     }
+
+    public ROAlignment getRoAlignment() {return roAlignment;}
 }

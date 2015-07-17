@@ -15,21 +15,21 @@ import java.util.Scanner;
 
 /**
  * A list of RavensProblems within one set.
- * 
+ *
  * Your agent does not need to use this class explicitly.
- * 
+ *
  */
 
 public class ProblemSet {
     private String name;
     private ArrayList<RavensProblem> problems;
-    
+
     /**
      * Initializes a new ProblemSet with the given name and an empty set of
      * problems.
-     * 
+     *
      * Your agent does not need to use this method.
-     * 
+     *
      * @param name The name of the problem set.
      */
     public ProblemSet(String name) {
@@ -37,33 +37,33 @@ public class ProblemSet {
         problems=new ArrayList<>();
         loadProblemSet();
     }
-    
+
     /**
      * Returns the name of the problem set.
-     * 
+     *
      * Your agent does not need to use this method. 
-     * 
+     *
      * @return the name of the problem set as a String
      */
     public String getName() {
         return name;
     }
-    
+
     /**
      * Returns an ArrayList of the RavensProblems in this problem set.
-     * 
+     *
      * Your agent does not need to use this method. 
-     * 
+     *
      * @return the RavensProblems in this set as an ArrayList.
      */
     public ArrayList<RavensProblem> getProblems() {
         return problems;
     }
-    
+
     /**
      * Loads the problem set from the folder whose name matches that of this
      * problem set.
-     * 
+     *
      * Your agent does not need to use this method.
      */
     private void loadProblemSet() {
@@ -73,16 +73,16 @@ public class ProblemSet {
         } catch(Exception ex) {
             System.out.println(ex);
         }
-        
+
         while(r.hasNext()) {
             String line = r.nextLine();
             loadProblem(line);
         }
     }
-    
+
     /**
      * Loads the problem from the folder whose name is given in 'problemName'.
-     * 
+     *
      * Your agent does not need to use this method.     * 
      */
     private void loadProblem(String problemName) {
@@ -92,12 +92,12 @@ public class ProblemSet {
         } catch(Exception ex) {
             System.out.println(ex);
         }
-        
+
         String problemType = r.nextLine();
         int correctAnswer = Integer.parseInt(r.nextLine());
         boolean hasVisual = Boolean.parseBoolean(r.nextLine());
         boolean hasVerbal = Boolean.parseBoolean(r.nextLine());
-        
+
         RavensProblem newProblem = new RavensProblem(problemName, problemType, correctAnswer, hasVisual, hasVerbal);
         if(hasVerbal) {
             HashMap<String, RavensFigure> figures=new HashMap<>();
@@ -147,11 +147,11 @@ public class ProblemSet {
         }
         problems.add(newProblem);
     }
-    
+
     /**
      * Returns the total number of problems answered in this set in a certain
      * type.
-     * 
+     *
      * @return the total number of problems answered in this set that match the
      * given type.
      */

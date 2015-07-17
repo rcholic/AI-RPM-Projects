@@ -46,10 +46,15 @@ public class ROAngleChange implements ROTransformationInterface {
         }
 
         ROAngleChange that = (ROAngleChange) o;
-        return this.angleDiff == that.angleDiff;
+        return Math.abs(this.angleDiff) == Math.abs(that.angleDiff);
     }
 
 
+    @Override
+    public String toString() {
+        return "object1 name: " + this.ravensObject1.getName() + ", object 2 name: " + this.ravensObject2.getName() +
+                " angleDiff = " + this.angleDiff;
+    }
 
     /**
      * get the angle difference between the two RavensObject

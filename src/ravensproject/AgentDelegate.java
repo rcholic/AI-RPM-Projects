@@ -4,6 +4,7 @@ import ravensproject.models.RavenFigureLevel.RFTransformation;
 import ravensproject.models.RavenObjectLevel.ROTransformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,7 +91,8 @@ public class AgentDelegate {
             } else {
                 */
                 int scoreCurrRFTransform = rfTransformation1.scoreRFTransformations(rfTransformation2);
-                if (scoreCurrRFTransform > maxRFTransformScore) {  //what if equal ?? -- how to break tie??
+                System.out.println("scoreCurrRFTransformation = " + scoreCurrRFTransform + ", maxRFScore = " + maxRFTransformScore);
+                if (scoreCurrRFTransform >= maxRFTransformScore) {  //what if equal ?? -- how to break tie??
                     this.answerChoice = i;
                     maxRFTransformScore = scoreCurrRFTransform;
                 }
@@ -197,7 +199,13 @@ public class AgentDelegate {
             answerTransformScores[1] = rfTransformation2.scoreRFTransformations(rfTransformation3);
             answerTransformScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
 
-            if (similarityScore < getSimilarityScores(answerTransformScores)) {  //how to handle tie??
+            System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
+            System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
+
+            double curSimilarityScore = getSimilarityScores(answerTransformScores);
+            System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
+            if (similarityScore <= curSimilarityScore) {  //how to handle tie??
+                similarityScore = curSimilarityScore;
                 this.answerChoice = i;
             }
         }
