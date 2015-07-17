@@ -86,7 +86,7 @@ public class AgentDelegate {
 
                 int scoreCurrRFTransform = rfTransformation1.scoreRFTransformations(rfTransformation2);
                 System.out.println("scoreCurrRFTransformation = " + scoreCurrRFTransform + ", maxRFScore = " + maxRFTransformScore);
-                if (scoreCurrRFTransform > maxRFTransformScore) {  //what if equal ?? -- how to break tie??
+                if (scoreCurrRFTransform >= maxRFTransformScore) {  //what if equal ?? -- how to break tie??
                     this.answerChoice = i;
                     maxRFTransformScore = scoreCurrRFTransform;
                 }
@@ -181,7 +181,7 @@ public class AgentDelegate {
 //        int transDiff = Integer.MAX_VALUE;
 
         int[] answerTransformScores;
-        double similarityScore = 0;
+        double similarityScore = Integer.MAX_VALUE;
         System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
         for (int i = 1; i <= 8; i++) {
             answerTransformScores = new int[3];
@@ -197,7 +197,7 @@ public class AgentDelegate {
 
             double curSimilarityScore = getSimilarityScores(answerTransformScores);
             System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
-            if (similarityScore < curSimilarityScore) {  //how to handle tie??
+            if (similarityScore > curSimilarityScore) {  //how to handle tie??
                 similarityScore = curSimilarityScore;
                 this.answerChoice = i;
             }
@@ -215,21 +215,35 @@ public class AgentDelegate {
      * @param answerTransformScores int array of size 3
      * @return
      */
-    private double getSimilarityScores(int[] answerTransformScores) {
-        double simScore = 0;
+//    private double getSimilarityScores(int[] answerTransformScores) {
+//        double simScore = 0;
+//
+//        for (int i = 0; i < 3; i++) {
+//            int firstRowNum = rfTransformationScores[i];
+//            int secondRowNum = rfTransformationScores[i + 3];
+//            int thirdRowNum = answerTransformScores[i];
+//
+//            double tmpSimScore = Math.abs(firstRowNum - thirdRowNum) + Math.abs(secondRowNum - thirdRowNum);
+//            simScore += (double) tmpSimScore / 2.0;
+//        }
+//        return simScore;
+//    }
 
+    private int getSimilarityScores(int[] answerTransformScores) {
+        int[] firstRowNum = new int[3];
+        int[] secondRowNum = new int[3];
+        int[] thirdRowNum = answerTransformScores;
         for (int i = 0; i < 3; i++) {
-            int firstRowNum = rfTransformationScores[i];
-            int secondRowNum = rfTransformationScores[i + 3];
-            int thirdRowNum = answerTransformScores[i];
-
-            double tmpSimScore = Math.abs(firstRowNum - thirdRowNum) + Math.abs(secondRowNum - thirdRowNum);
-            simScore += (double) tmpSimScore / 2.0;
+            firstRowNum[i] = rfTransformationScores[i];
+            secondRowNum[i] = rfTransformationScores[i+3];
         }
-
-
-        return simScore;
+        int minSimilarScore = 0;
+        for (int i = 0; i < 3; i++) {
+            minSimilarScore += (Math.abs(thirdRowNum[i] - firstRowNum[i]) + Math.abs(thirdRowNum[i] - secondRowNum[i]));
+        }
+        return minSimilarScore;
     }
+
 
     private int compareRowTransformations(List<List<RFTransformation>> firstTwoRowTransforms, List<RFTransformation> thirdRowTransforms) {
         int diff = 0;
