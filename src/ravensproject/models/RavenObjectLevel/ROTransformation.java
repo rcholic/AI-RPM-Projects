@@ -83,7 +83,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         if (this.roFillChange.isFillChanged()) {
             whatsChanged.add(this.roFillChange);
         }
-        if (this.roAlignment.isDifferent()) {
+        if (!this.roAlignment.isSameAlignment()) {
             whatsChanged.add(this.roAngleChange);
         }
 
@@ -109,7 +109,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         if (this.roFillChange.isFillChanged()) {
             unchanged.add(this.roFillChange);
         }
-        if (!this.roAlignment.isDifferent()) {
+        if (this.roAlignment.isSameAlignment()) {
             unchanged.add(this.roAlignment);
         }
 
@@ -132,10 +132,10 @@ public class ROTransformation implements Comparator<ROTransformation> {
         if (o1.roAngleChange.getAngleDiff() > o2.roAngleChange.getAngleDiff()) {
             return 1;
         }
-        if (o1.roAlignment.isDifferent() == false && o2.roAlignment.isDifferent() == true) {
+        if (o1.roAlignment.isSameAlignment() == false && o2.roAlignment.isSameAlignment() == true) {
             return 1;
         }
-        if (o1.roAlignment.isDifferent() == true && o2.roAlignment.isDifferent() == false) {
+        if (o1.roAlignment.isSameAlignment() == true && o2.roAlignment.isSameAlignment() == false) {
             return -1;
         }
 
@@ -166,7 +166,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         sb.append(this.roSizeChange.getAttributeKeyName() + " : " + this.roSizeChange.sizeDifference());
         sb.append(this.roShapeTransformation.getAttributeKeyName() + " : " + this.roShapeTransformation.toString());
         sb.append(this.roAngleChange.getAttributeKeyName() + " : " + this.roAngleChange.getAngleDiff());
-        sb.append(this.roAlignment.getAttributeKeyName() + " : " + this.roAlignment.isDifferent());
+        sb.append(this.roAlignment.getAttributeKeyName() + " : " + this.roAlignment.isSameAlignment());
         return sb.toString();
     }
 

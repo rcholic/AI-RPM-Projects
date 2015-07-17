@@ -22,12 +22,12 @@ public class ROAlignment implements ROTransformationInterface {
      * false for not different (same)
      * @return
      */
-    public boolean isDifferent() {
+    public boolean isSameAlignment() {
 
         if (ravensObject1.getAttributes().containsKey(RO_ATTRIBUTE_KEY) &&
                 ravensObject2.getAttributes().containsKey(RO_ATTRIBUTE_KEY)) {
 
-            return !(ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY).equals(ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY)));
+            return ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY).equals(ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY));
         }
 
         return false;
@@ -44,7 +44,7 @@ public class ROAlignment implements ROTransformationInterface {
         }
 
         ROAlignment that = (ROAlignment) o;
-        return this.isDifferent() == that.isDifferent();
+        return this.isSameAlignment() == that.isSameAlignment(); //could be more accurate
     }
 
     @Override

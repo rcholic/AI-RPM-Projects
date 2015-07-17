@@ -83,20 +83,13 @@ public class AgentDelegate {
         for (int i = 1; i <= 6; i++) {
             ravensFigure2 = ravensProblem.getFigures().get(Integer.toString(i));
             rfTransformation2 = new RFTransformation(ravensFigure1, ravensFigure2);
-            /*
-            if (rfTransformation1.equals(rfTransformation2)) {
-                System.out.println("found two equal RFTransformations!! " + ravensFigure1.getName() + " - " + ravensFigure2.getName());
-                this.answerChoice = i;
-                break;
-            } else {
-                */
+
                 int scoreCurrRFTransform = rfTransformation1.scoreRFTransformations(rfTransformation2);
                 System.out.println("scoreCurrRFTransformation = " + scoreCurrRFTransform + ", maxRFScore = " + maxRFTransformScore);
-                if (scoreCurrRFTransform >= maxRFTransformScore) {  //what if equal ?? -- how to break tie??
+                if (scoreCurrRFTransform > maxRFTransformScore) {  //what if equal ?? -- how to break tie??
                     this.answerChoice = i;
                     maxRFTransformScore = scoreCurrRFTransform;
                 }
-            //}
         }
 
         int correctAnswer = ravensProblem.checkAnswer(this.answerChoice);
@@ -189,6 +182,7 @@ public class AgentDelegate {
 
         int[] answerTransformScores;
         double similarityScore = 0;
+        System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
         for (int i = 1; i <= 8; i++) {
             answerTransformScores = new int[3];
             ravensFigure3 = ravensProblem.getFigures().get(Integer.toString(i));
@@ -199,12 +193,11 @@ public class AgentDelegate {
             answerTransformScores[1] = rfTransformation2.scoreRFTransformations(rfTransformation3);
             answerTransformScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
 
-            System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
             System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
 
             double curSimilarityScore = getSimilarityScores(answerTransformScores);
             System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
-            if (similarityScore <= curSimilarityScore) {  //how to handle tie??
+            if (similarityScore < curSimilarityScore) {  //how to handle tie??
                 similarityScore = curSimilarityScore;
                 this.answerChoice = i;
             }
