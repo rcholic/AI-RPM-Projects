@@ -1,10 +1,7 @@
 package ravensproject.models.RavenFigureLevel;
 
 import ravensproject.RavensFigure;
-import ravensproject.models.RavenObjectLevel.CorrespondingRO;
-import ravensproject.models.RavenObjectLevel.ROTransformation;
-import ravensproject.models.RavenObjectLevel.ROTransformationInterface;
-import ravensproject.models.RavenObjectLevel.RavensFigObjNameComposite;
+import ravensproject.models.RavenObjectLevel.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +136,15 @@ public class RFTransformation {
                     System.out.println("transform are equal in Changed: " + transform1.getAttributeKeyName() + ": " + transform1.toString());
                     score += 2; // increment by 4
                 }
+// else if (transform1.getAttributeKeyName().equals("size")) {
+//                    ROSizeChange roSizeChange1 = (ROSizeChange) transform1;
+//                    ROSizeChange roSizeChange2 = (ROSizeChange) transform2;
+//
+//                    score -= 2;
+//
+//                    System.out.println("In changed, transform not equal for size: diff1 = " + roSizeChange1.toString()
+//                    + " diff2 = " + roSizeChange2.sizeDifference());
+//                }
             }
         }
 
