@@ -1,11 +1,11 @@
 package ravensproject.Utils;
 
 import ravensproject.RavensFigure;
-// import ravensproject.RavensObject;
+import ravensproject.RavensObject;
 import ravensproject.RavensProblem;
 import ravensproject.models.Image.Coordinate;
 import ravensproject.models.Image.IdentifiedObject;
-import ravensproject.models.Image.RavensObject;
+//import ravensproject.models.Image.RavensObject;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -207,8 +207,8 @@ public class ImageIdentifier {
                                 new Coordinate(bottomLeft, (objectTop + height)), new Coordinate(bottomRight, (objectTop + height)), topWidth,
                                 middleWidth, bottomWidth, height, followsCurve, isFilled);
 
-                        populateObject(ravenObj, object);
-                        this.ravensObjects.add(ravenObj);
+
+                        this.ravensObjects.add(populateObject(ravenObj, object));
                         //Mark the edges so that we can recognize them
                         for(Coordinate pair : edges) {
                             try {
@@ -366,22 +366,22 @@ public class ImageIdentifier {
      * @param ravenObj - RavensObject to be populated with gathered knowledge
      * @param object - CoordinateObject which contains the information known.
      *******************************************************************************/
-    private void populateObject(RavensObject ravenObj, IdentifiedObject object) {
+    private RavensObject populateObject(RavensObject ravenObj, IdentifiedObject object) {
         HashMap<String, String> attributes = new HashMap<>();
         //ArrayList<ROAttributeValuePair> attrs = new ArrayList<>();
 
-        attributes.put("shape", object.getShape().toString());
-        attributes.put("fill", object.isFilled ? "yes" : "no");
-
+        ravenObj.getAttributes().put("shape", object.getShape().toString());
+        ravenObj.getAttributes().put("fill", object.isFilled ? "yes" : "no");
+        //lacking angle changes!!
         //Set the size
         if(object.getHeight() >= 140)  {
-            attributes.put("size", "large");
+            ravenObj.getAttributes().put("size", "large");
         }else if(object.getHeight() >= 90  && object.getHeight() < 140)  {
-            attributes.put("size", "medium");
+            ravenObj.getAttributes().put("size", "medium");
         }else if(object.getHeight() < 90)  {
-            attributes.put("size", "small");
+            ravenObj.getAttributes().put("size", "small");
         }
-        ravenObj.setAttributes(attributes);
+        return ravenObj;
     }
 
 
