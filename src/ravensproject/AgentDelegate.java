@@ -62,11 +62,17 @@ public class AgentDelegate {
     public void solve() {
         // int answerChoice = 6;
 
+        ImageSolver imageSolver = new ImageSolver();
+
         System.out.println("solving problem: " + this.ravensProblem.getName());
         if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVerbal()) {
             solve2x2RPM(ravensProblem);
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVerbal()) {
             solve3x3RPM(ravensProblem);
+        } else if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVisual()) {
+            this.answerChoice = imageSolver.solve2x2RPMVisually(ravensProblem);
+        } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVisual()) {
+            this.answerChoice = imageSolver.solve3x3RPMVisually(ravensProblem);
         }
 
         //return answerChoice;

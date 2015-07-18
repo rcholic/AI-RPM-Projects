@@ -103,6 +103,7 @@ public class ProblemSet {
             HashMap<String, RavensFigure> figures=new HashMap<>();
             RavensFigure currentFigure=null;
             RavensObject currentObject=null;
+            //System.out.println("getName(): " + getName());
             while(r.hasNext()) {
                 String line=r.nextLine();
                 if(!line.startsWith("\t")) {
@@ -125,6 +126,7 @@ public class ProblemSet {
             newProblem.getFigures().putAll(figures);
         }
         else {
+
             newProblem.getFigures().put("A", new RavensFigure("A", problemName, getName()));
             newProblem.getFigures().put("B", new RavensFigure("B", problemName, getName()));
             newProblem.getFigures().put("C", new RavensFigure("C", problemName, getName()));

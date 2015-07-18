@@ -50,4 +50,5 @@ public class RavensObject {
     public HashMap<String,String> getAttributes() {
         return attributes;
     }
+
 }
