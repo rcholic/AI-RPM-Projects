@@ -1,6 +1,10 @@
 package ravensproject;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by guoliangwang on 5/31/15.
@@ -40,6 +44,39 @@ public class TestFile {
         }
 
         System.out.println("answerNum = " + answerNum + ", similarity score: " + similarityScore);
+
+        File curImage = new File("Problems/Basic Problems D/Basic Problem D-02/2.png");
+
+        BufferedImage image = null;
+        int[][]pixelMatrix;
+        try {
+            image = ImageIO.read(curImage);
+            System.out.println("image width = " + image.getWidth() + ", height = " + image.getHeight());
+            pixelMatrix = new int[image.getHeight()][image.getWidth()];
+            for (int y = image.getMinY(); y < image.getHeight(); y++) {
+                for (int x = image.getMinX(); x < image.getWidth(); x++) {
+
+                    int rgb = image.getRGB(x, y);
+                    int alpha = (rgb & 0xFF000000) >>> 24;
+                    int red = (rgb) & 0xFF;
+                    int green = (rgb>>8) & 0xFF;
+                    int blue = (rgb>>16) & 0xFF;
+                    // int curColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0;
+                    int curColor = (rgb != -1) ? 1 : 0;
+                    System.out.println("curColor = " + curColor);
+                    pixelMatrix[y][x] = curColor;
+                }
+            }
+
+            //print out the matrix
+            for (int i = 0; i < pixelMatrix.length; i++) {
+                System.out.println(Arrays.toString(pixelMatrix[i]));
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
 

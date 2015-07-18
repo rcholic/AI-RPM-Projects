@@ -27,7 +27,13 @@ public class ImageIdentifier {
     private String figureName;
     private BufferedImage bufferedImage;
 
+    public ImageIdentifier() {}
 
+
+    /**
+     * convert the PNG image to RavensFigure object
+     * @return
+     */
     public RavensFigure convertImageToRF() {
 
         RavensProblem problem = this.ravensProblem;
@@ -51,13 +57,14 @@ public class ImageIdentifier {
         int[][]pixelMatrix = new int[bottomRightPoint.getY() - topLeftPoint.getY()][bottomRightPoint.getX() - topLeftPoint.getX()];
 
         //fill the pixelMatrix, from top to bottom, left to right (upperLeft corner has (0, 0) coordinate)
-        for (int y = topLeftPoint.getY(); y < topLeftPoint.getY(); y++) {
-            for (int x = bottomRightPoint.getX(); x < bottomRightPoint.getX(); x++) {
+        for (int y = topLeftPoint.getY(); y < bottomRightPoint.getY(); y++) {
+            for (int x = topLeftPoint.getX(); x < bottomRightPoint.getX(); x++) {
                 int rgbValue = inputImage.getRGB(x, y);
                 int red = (rgbValue) & 0xFF;
                 int green = (rgbValue>>8) & 0xFF;
                 int blue = (rgbValue>>16) & 0xFF;
-                int currColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0; //1 for black, 0 for white
+                int currColor = (rgbValue != -1) ? 1 : 0; //1 for black, 0 for white
+                // int currColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0; //1 for black, 0 for white
                 pixelMatrix[y][x] = currColor;
             }
         }
