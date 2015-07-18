@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,12 @@ public class ImageSolver {
         describedFigures = new ArrayList<>();
         imageIdentifier.setRavensProblem(problem);
 
+//        File descriptionFile = new File("/Users/guoliangwang/Desktop/describedRF.txt");
+//        descriptionFile.getParentFile().mkdirs();
+//        if (descriptionFile.exists()) {
+//            descriptionFile.delete();
+//        }
+//        PrintWriter printWriter;
         for (RavensFigure figure : problem.getFigures().values()) {
             System.out.println("figure info: " + figure.getName() + ", visual: " + figure.getVisual());
             String figureName = figure.getName();
@@ -73,19 +80,29 @@ public class ImageSolver {
             try {
                 pngFile = new File(figurePath);
                 inputImage = ImageIO.read(pngFile);
+                if (inputImage != null) {
+                    imageIdentifier.setBufferedImage(inputImage);
+                    imageIdentifier.setFigureName(figureName);
+                    imageIdentifier.setProblemSetName("empty");
+                }
+
+                RavensFigure describedRF = imageIdentifier.convertImageToRF();
+//                printWriter = new PrintWriter(descriptionFile);
+//                printWriter.write(problem.getName());
+//                printWriter.write(figure.getName());
+//                printWriter.write(describedRF.getObjects().keySet().toString());
+//                for (RavensObject object : describedRF.getObjects().values()) {
+//                    printWriter.write(object.getAttributes().values().toString());
+//                }
+//                printWriter.close();
+                describedFigures.add(describedRF);
+
             } catch (IOException e) {
                 System.out.println("problem reading the image file");
                 e.printStackTrace();
             }
 
-            if (inputImage != null) {
-                imageIdentifier.setBufferedImage(inputImage);
-                imageIdentifier.setFigureName(figureName);
-                imageIdentifier.setProblemSetName("empty");
-            }
 
-            RavensFigure describedRF = imageIdentifier.convertImageToRF();
-            describedFigures.add(describedRF);
         }
         System.out.println("number of describedFigures: " + describedFigures.size());
         return this.answerChoice;

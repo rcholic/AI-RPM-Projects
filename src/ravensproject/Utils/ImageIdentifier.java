@@ -10,6 +10,7 @@ import ravensproject.models.Image.IdentifiedObject;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -20,8 +21,8 @@ import java.util.HashMap;
  */
 
 public class ImageIdentifier {
-    private RavensFigure ravensFigure;
-    private ArrayList<RavensObject> ravensObjects;
+   // private RavensFigure ravensFigure;
+   // private ArrayList<RavensObject> ravensObjects;
     private RavensProblem ravensProblem;
     private String problemSetName; //e.g. Basic Problems B
     private String figureName;
@@ -41,8 +42,8 @@ public class ImageIdentifier {
         String problemSetName = this.problemSetName;
         BufferedImage inputImage = this.bufferedImage;
 
-        this.ravensFigure = new RavensFigure(figureName, problem.getName(), problemSetName);
-        this.ravensObjects = new ArrayList<>();
+        RavensFigure ravensFigure = new RavensFigure(figureName, problem.getName(), problemSetName);
+        List<RavensObject> ravensObjects = new ArrayList<>();
         int numObject = 0;
 
 //        int topRightX = inputImage.getWidth();
@@ -212,14 +213,14 @@ public class ImageIdentifier {
                                 middleWidth, bottomWidth, height, followsCurve, isFilled);
 
 
-                        this.ravensObjects.add(populateObject(ravenObj, object));
-                        //Mark the edges so that we can recognize them
+                        ravensObjects.add(populateObject(ravenObj, object));
+                        //mark the edges as used
                         for(Coordinate coordinate : edges) {
                             try {
                                 pixelMatrix[coordinate.getY()][coordinate.getX()] = numObject;
                             } catch(ArrayIndexOutOfBoundsException e) {
-                                System.out.println("index our of bound");
-                                e.printStackTrace();
+                              //  System.out.println("index our of bound");
+                              //  e.printStackTrace();
                             }
                         }
                     }
@@ -228,29 +229,14 @@ public class ImageIdentifier {
         }
 
         //populate the Ravens Figure with RavensObjects
-        for (int i = 0; i < this.ravensObjects.size(); i++) {
-            this.ravensFigure.getObjects().put(Integer.toString(i), this.ravensObjects.get(i));
+        for (int i = 0; i < ravensObjects.size(); i++) {
+            RavensObject curRavensObject = ravensObjects.get(i);
+            ravensFigure.getObjects().put(curRavensObject.getName(), curRavensObject);
         }
         
         
         //copied above
-        return this.ravensFigure;
-    }
-
-    public RavensFigure getRavensFigure() {
         return ravensFigure;
-    }
-
-    public void setRavensFigure(RavensFigure ravensFigure) {
-        this.ravensFigure = ravensFigure;
-    }
-
-    public ArrayList<RavensObject> getRavensObjects() {
-        return ravensObjects;
-    }
-
-    public void setRavensObjects(ArrayList<RavensObject> ravensObjects) {
-        this.ravensObjects = ravensObjects;
     }
 
     public RavensProblem getRavensProblem() {
@@ -367,14 +353,14 @@ public class ImageIdentifier {
         return toReturn;
     }
 
-    /********************************************************************************
+    /**
      * Create a RavensObject from the infromation gathered to map out an object
      * The only attributes supported at this point are fill, size and shape
      * This method depends on pass by reference.
      *
      * @param ravenObj - RavensObject to be populated with gathered knowledge
-     * @param object - CoordinateObject which contains the information known.
-     *******************************************************************************/
+     * @param object - IdentifiedObject which contains info from prior knowledge
+     */
     private RavensObject populateObject(RavensObject ravenObj, IdentifiedObject object) {
         HashMap<String, String> attributes = new HashMap<>();
         //ArrayList<ROAttributeValuePair> attrs = new ArrayList<>();
