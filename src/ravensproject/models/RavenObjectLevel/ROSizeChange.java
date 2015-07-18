@@ -65,7 +65,7 @@ public class ROSizeChange implements ROTransformationInterface {
                 return NON_COMPARABLE_SIZEDIFF;
             }
         } else {
-            return -NON_COMPARABLE_SIZEDIFF; //no size attribute, no need to compare size
+            return NON_COMPARABLE_SIZEDIFF; //no size attribute, no need to compare size
         }
     }
 
@@ -121,6 +121,11 @@ public class ROSizeChange implements ROTransformationInterface {
         }
 
         return secondObjectSizeStr;
+    }
+
+    @Override
+    public String toString() {
+        return "sizeDifference: " + this.sizeDifference();
     }
 
 

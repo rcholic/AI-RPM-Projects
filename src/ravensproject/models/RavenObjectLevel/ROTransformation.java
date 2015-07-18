@@ -77,7 +77,7 @@ public class ROTransformation implements Comparator<ROTransformation> {
         if (this.roShapeTransformation.isShapeChanged()) {
             whatsChanged.add(this.roShapeTransformation);
         }
-        if (this.roSizeChange.sizeDifference() != 0) {
+        if (this.roSizeChange.sizeDifference() != 0 && this.roSizeChange.sizeDifference() != -100) {
             whatsChanged.add(this.roSizeChange);
         }
         if (this.roFillChange.isFillChanged()) {
