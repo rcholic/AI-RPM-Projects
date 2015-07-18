@@ -122,7 +122,6 @@ public class RFTransformation {
      * @return int
      */
     public int scoreRFTransformations(RFTransformation transformation) {
-        //TODO: score the differences between Figure Transformations
         List<ROTransformationInterface> anotherCompiledTransForm = transformation.compileROTransformationsInMatchedObjects();
         int score = 0;
         int shorterLength = Math.min(anotherCompiledTransForm.size(), this.compileROTransformationsInMatchedObjects().size());
@@ -134,7 +133,7 @@ public class RFTransformation {
 
             if (transform1.getAttributeKeyName().equals(transform2.getAttributeKeyName())) {
                // System.out.println("transforms key are the same: " + transform1.getAttributeKeyName());
-                // score += 1; //if the key (e.g. size) are the same, increment the score by 1
+                 score += 1; //if the key (e.g. size) are the same, increment the score by 1
 
                 if (transform1.equals(transform2)) {
                     System.out.println("transform are equal in Changed: " + transform1.getAttributeKeyName() + ": " + transform1.toString());

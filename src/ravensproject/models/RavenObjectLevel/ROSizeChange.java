@@ -18,6 +18,7 @@ public class ROSizeChange implements ROTransformationInterface {
     private final static String RO_ATTRIBUTE_KEY = "size";
     private final static int NON_COMPARABLE_SIZEDIFF = -100;
     private static Map<String, Integer> sizeStringIntegerTable;
+    private static Map<String, String> dimensionToSizeStr; //key: concatenation of widthheight
     private RavensObject ravensObject1;
     private RavensObject ravensObject2;
 
@@ -33,6 +34,16 @@ public class ROSizeChange implements ROTransformationInterface {
         sizeStringIntegerTable.put("very large", 5);
         sizeStringIntegerTable.put("huge", 6);
         sizeStringIntegerTable.put("gigantic", 7);
+
+        dimensionToSizeStr = new HashMap<>();
+        dimensionToSizeStr.put("largesmall", "large");
+        dimensionToSizeStr.put("hugesmall", "huge");
+        dimensionToSizeStr.put("smalllarge", "small");
+        dimensionToSizeStr.put("hugelarge", "huge");
+        dimensionToSizeStr.put("smallhuge", "small");
+        dimensionToSizeStr.put("largehuge", "large");
+        dimensionToSizeStr.put("hugesmall", "large");
+
     }
 
     //default constructor
@@ -54,19 +65,38 @@ public class ROSizeChange implements ROTransformationInterface {
      */
     public int sizeDifference() {
 
+        String object1Size = null;
+        String object2Size = null;
+        String height1, width1, height2, width2;
+
         if (ravensObject1.getAttributes().containsKey(RO_ATTRIBUTE_KEY) &&
                 ravensObject2.getAttributes().containsKey(RO_ATTRIBUTE_KEY)) {
-            String object1Size = ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY);
-            String object2Size = ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY);
+            object1Size = ravensObject1.getAttributes().get(RO_ATTRIBUTE_KEY);
+            object2Size = ravensObject2.getAttributes().get(RO_ATTRIBUTE_KEY);
 
-            if (sizeStringIntegerTable.containsKey(object1Size) && sizeStringIntegerTable.containsKey(object2Size)) {
-                return sizeStringIntegerTable.get(object2Size) - sizeStringIntegerTable.get(object1Size);
-            } else {
-                return NON_COMPARABLE_SIZEDIFF;
+        } else if(ravensObject1.getAttributes().containsKey("width") && ravensObject2.getAttributes().containsKey("width")
+                && ravensObject1.getAttributes().containsKey("height") && ravensObject2.getAttributes().containsKey("height")) {
+            //check on height & width if available
+            height1 = ravensObject1.getAttributes().get("height");
+            width1 = ravensObject1.getAttributes().get("width");
+            height2 = ravensObject2.getAttributes().get("height");
+            width2 = ravensObject2.getAttributes().get("width");
+
+            if (dimensionToSizeStr.containsKey(width1+height1) &&
+                    dimensionToSizeStr.containsKey(width2+height2)) {
+                object1Size = dimensionToSizeStr.get(width1 + height1);
+                object2Size = dimensionToSizeStr.get(width2 + height2);
+                System.out.println("with width & height, object1Size: " + object1Size +
+                ", object2Size: " + object2Size);
             }
-        } else {
-            return NON_COMPARABLE_SIZEDIFF; //no size attribute, no need to compare size
         }
+
+        if (object1Size != null && object2Size != null &&
+                sizeStringIntegerTable.containsKey(object1Size) && sizeStringIntegerTable.containsKey(object2Size)) {
+            return sizeStringIntegerTable.get(object2Size) - sizeStringIntegerTable.get(object1Size);
+        }
+
+        return NON_COMPARABLE_SIZEDIFF;
     }
 
     @Override
@@ -85,6 +115,10 @@ public class ROSizeChange implements ROTransformationInterface {
         }
 
         ROSizeChange that = (ROSizeChange) o;
+        if (this.sizeDifference() == NON_COMPARABLE_SIZEDIFF ||
+                that.sizeDifference() == NON_COMPARABLE_SIZEDIFF) {
+            return false;
+        }
         return this.sizeDifference() == that.sizeDifference();
     }
 
