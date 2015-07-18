@@ -60,9 +60,6 @@ public class ImageIdentifier {
         for (int y = topLeftPoint.getY(); y < bottomRightPoint.getY(); y++) {
             for (int x = topLeftPoint.getX(); x < bottomRightPoint.getX(); x++) {
                 int rgbValue = inputImage.getRGB(x, y);
-                int red = (rgbValue) & 0xFF;
-                int green = (rgbValue>>8) & 0xFF;
-                int blue = (rgbValue>>16) & 0xFF;
                 int currColor = (rgbValue != -1) ? 1 : 0; //1 for black, 0 for white
                 // int currColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0; //1 for black, 0 for white
                 pixelMatrix[y][x] = currColor;

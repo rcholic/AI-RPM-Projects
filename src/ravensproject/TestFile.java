@@ -63,14 +63,16 @@ public class TestFile {
                     int blue = (rgb>>16) & 0xFF;
                     // int curColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0;
                     int curColor = (rgb != -1) ? 1 : 0;
-                    System.out.println("curColor = " + curColor);
                     pixelMatrix[y][x] = curColor;
+                    if (curColor == 1) {
+                        System.out.println(red == 0 && green == 0 && blue == 0); // black ?? some true, some false
+                    }
                 }
             }
 
             //print out the matrix
             for (int i = 0; i < pixelMatrix.length; i++) {
-                System.out.println(Arrays.toString(pixelMatrix[i]));
+              //  System.out.println(Arrays.toString(pixelMatrix[i]));
             }
 
 
