@@ -214,21 +214,26 @@ public class ImageIdentifier {
 
                         this.ravensObjects.add(populateObject(ravenObj, object));
                         //Mark the edges so that we can recognize them
-                        for(Coordinate pair : edges) {
+                        for(Coordinate coordinate : edges) {
                             try {
-                                pixelMatrix[pair.getY()][pair.getX()] = numObject;
+                                pixelMatrix[coordinate.getY()][coordinate.getX()] = numObject;
                             } catch(ArrayIndexOutOfBoundsException e) {
-
+                                System.out.println("index our of bound");
+                                e.printStackTrace();
                             }
                         }
                     }
                 }
             }
         }
+
+        //populate the Ravens Figure with RavensObjects
+        for (int i = 0; i < this.ravensObjects.size(); i++) {
+            this.ravensFigure.getObjects().put(Integer.toString(i), this.ravensObjects.get(i));
+        }
         
         
         //copied above
-
         return this.ravensFigure;
     }
 
