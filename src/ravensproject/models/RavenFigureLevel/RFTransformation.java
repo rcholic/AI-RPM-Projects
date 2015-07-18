@@ -133,7 +133,7 @@ public class RFTransformation {
                  score += 1; //if the key (e.g. size) are the same, increment the score by 1
 
                 if (transform1.equals(transform2)) {
-                    System.out.println("transform are equal in Changed: " + transform1.getAttributeKeyName() + ": " + transform1.toString());
+                  //  System.out.println("transform are equal in Changed: " + transform1.getAttributeKeyName() + ": " + transform1.toString());
                     score += 2; // increment by 4
                 }
 // else if (transform1.getAttributeKeyName().equals("size")) {
@@ -156,7 +156,7 @@ public class RFTransformation {
             if (transform1.getAttributeKeyName().equals(transform2.getAttributeKeyName())) {
                 score += 1;
                 if (transform1.equals(transform2)) {
-                    System.out.println("transform are equal in Unchanged in : " + transform1.getAttributeKeyName() + ": " + transform1.toString());
+                  //  System.out.println("transform are equal in Unchanged in : " + transform1.getAttributeKeyName() + ": " + transform1.toString());
                     score += 7;
                 }
             }
@@ -169,7 +169,7 @@ public class RFTransformation {
 
         if (this.getUnmatchedRavensObjects().size() == transformation.getUnmatchedRavensObjects().size()) {
           //  System.out.println("number of unmatched objects are the same!");
-            score += 4;
+            score += 1;
         }
 
         return score;

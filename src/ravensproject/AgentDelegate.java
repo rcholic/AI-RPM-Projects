@@ -241,6 +241,11 @@ public class AgentDelegate {
                 similarityScore = curSimilarityScore;
                 this.answerChoice = i;
             }
+            /*
+            else if (similarityScore == curSimilarityScore) {
+                breakTie(this.answerChoice, i, answerScoresMatrix);
+            }
+            */
         }
     }
 
@@ -316,6 +321,7 @@ public class AgentDelegate {
 
         if (combinedPattern1 == ansPattern31 && combinedPattern2 == ansPattern32) {
             this.answerChoice = answerChoice;
+            return;
         }
 
         this.answerChoice = tie;
