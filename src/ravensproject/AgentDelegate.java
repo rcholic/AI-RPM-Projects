@@ -95,7 +95,7 @@ public class AgentDelegate {
             rfTransformation2 = new RFTransformation(ravensFigure1, ravensFigure2);
 
             int scoreCurrRFTransform = rfTransformation1.scoreRFTransformations(rfTransformation2);
-            System.out.println("scoreCurrRFTransformation = " + scoreCurrRFTransform + ", maxRFScore = " + maxRFTransformScore);
+            //System.out.println("scoreCurrRFTransformation = " + scoreCurrRFTransform + ", maxRFScore = " + maxRFTransformScore);
             if (scoreCurrRFTransform >= maxRFTransformScore) {  //what if equal ?? -- how to break tie??
                 this.answerChoice = i;
                 maxRFTransformScore = scoreCurrRFTransform;
@@ -150,7 +150,7 @@ public class AgentDelegate {
 
         int[] answerTransformScores;
         int similarityScore = Integer.MAX_VALUE;
-        System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
+        // System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
         int[][] answerScoresMatrix = new int[8][3]; //8 answers, 3 RFtransformation scores
         for (int i = 1; i <= 8; i++) {
             answerTransformScores = new int[3];
@@ -163,10 +163,10 @@ public class AgentDelegate {
             answerTransformScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
             answerScoresMatrix[i-1] = answerTransformScores;
 
-            System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
+            //System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
 
             int curSimilarityScore = getSimilarityScores(answerTransformScores);
-            System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
+            // System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
             if (similarityScore > curSimilarityScore) {  //how to handle tie??
                 similarityScore = curSimilarityScore;
                 this.answerChoice = i;
@@ -228,7 +228,7 @@ public class AgentDelegate {
 
         int[] answerTransformScores;
         int similarityScore = Integer.MAX_VALUE;
-        System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
+        // System.out.println("first two row scores: " + Arrays.toString(rfTransformationScores));
         int[][] answerScoresMatrix = new int[8][3]; //8 answers, 3 RFtransformation scores
         for (int i = 1; i <= 8; i++) {
             answerTransformScores = new int[3];
@@ -241,10 +241,10 @@ public class AgentDelegate {
             answerTransformScores[2] = rfTransformation1.scoreRFTransformations(rfTransformation3);
             answerScoresMatrix[i-1] = answerTransformScores;
 
-            System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
+            // System.out.println("third row scores: " + Arrays.toString(answerTransformScores));
 
             int curSimilarityScore = getSimilarityScores(answerTransformScores);
-            System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
+            // System.out.println("curSimilarityScore = " + curSimilarityScore + ", previous similarityScore = " + similarityScore);
             if (similarityScore >= curSimilarityScore) {  //how to handle tie??
                 similarityScore = curSimilarityScore;
                 this.answerChoice = i;

@@ -86,8 +86,8 @@ public class ROSizeChange implements ROTransformationInterface {
                     dimensionToSizeStr.containsKey(width2+height2)) {
                 object1Size = dimensionToSizeStr.get(width1 + height1);
                 object2Size = dimensionToSizeStr.get(width2 + height2);
-                System.out.println("with width & height, object1Size: " + object1Size +
-                ", object2Size: " + object2Size);
+               // System.out.println("with width & height, object1Size: " + object1Size +
+               // ", object2Size: " + object2Size);
             }
         }
 

@@ -28,7 +28,7 @@ public class ImageSolver {
         imageIdentifier.setRavensProblem(problem);
 
         for (RavensFigure figure : problem.getFigures().values()) {
-            System.out.println("figure info: " + figure.getName() + ", visual: " + figure.getVisual());
+            // System.out.println("figure info: " + figure.getName() + ", visual: " + figure.getVisual());
             String figureName = figure.getName();
             String figurePath = figure.getVisual();
 
@@ -64,7 +64,7 @@ public class ImageSolver {
 //        }
 //        PrintWriter printWriter;
         for (RavensFigure figure : problem.getFigures().values()) {
-            System.out.println("figure info: " + figure.getName() + ", visual: " + figure.getVisual());
+           // System.out.println("figure info: " + figure.getName() + ", visual: " + figure.getVisual());
             String figureName = figure.getName();
             String figurePath = figure.getVisual();
 

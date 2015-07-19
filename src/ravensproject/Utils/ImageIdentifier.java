@@ -62,7 +62,6 @@ public class ImageIdentifier {
             for (int x = topLeftPoint.getX(); x < bottomRightPoint.getX(); x++) {
                 int rgbValue = inputImage.getRGB(x, y);
                 int currColor = (rgbValue != -1) ? 1 : 0; //1 for black, 0 for white
-                // int currColor = (red == 0 && green == 0 && blue == 0) ? 1 : 0; //1 for black, 0 for white
                 pixelMatrix[y][x] = currColor;
             }
         }
@@ -219,7 +218,6 @@ public class ImageIdentifier {
                         if (lastIdentifiedObj == null) {
                             lastIdentifiedObj = currentIdentifiedObj;
                         } else {
-                            //TODO: label the current object position with the last object as reference
 
                             if (currentIdentifiedObj.topRight.getY() > lastIdentifiedObj.topRight.getY() &&
                                     currentIdentifiedObj.topLeft.getY() > lastIdentifiedObj.topLeft.getY() &&
@@ -245,6 +243,8 @@ public class ImageIdentifier {
                                 spatialRelatedToLastObject = "overlap";
                             }
 
+                           // System.out.println("spatial relation identified as " + spatialRelatedToLastObject);
+
                             lastIdentifiedObj = currentIdentifiedObj; //update the lastIdentifiedObj to current
                         }
 
@@ -253,7 +253,7 @@ public class ImageIdentifier {
                         //mark the edges as used
                         for(Coordinate coordinate : edges) {
                             try {
-                                pixelMatrix[coordinate.getY()][coordinate.getX()] = numObject;
+                                pixelMatrix[coordinate.getY()][coordinate.getX()] = -1; //pixel has been used
                             } catch(ArrayIndexOutOfBoundsException e) {
                               //  System.out.println("index our of bound");
                               //  e.printStackTrace();
@@ -264,7 +264,7 @@ public class ImageIdentifier {
             }
         }
 
-        //populate the Ravens Figure with RavensObjects
+        //populate the Ravens Figure with the RavensObjects
         for (int i = 0; i < ravensObjects.size(); i++) {
             RavensObject curRavensObject = ravensObjects.get(i);
             ravensFigure.getObjects().put(curRavensObject.getName(), curRavensObject);
