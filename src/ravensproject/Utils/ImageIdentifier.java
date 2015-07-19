@@ -68,6 +68,9 @@ public class ImageIdentifier {
         }
         
         //copied below
+        IdentifiedObject currentIdentifiedObj = null;
+        IdentifiedObject lastIdentifiedObj = null;
+        String spatialRelatedToLastObject = null;
         for(int y = topLeftPoint.getY(); y < bottomRightPoint.getY(); y++)  {
             for(int x = topLeftPoint.getX(); x < bottomRightPoint.getX(); x++)  {
                 int leftOf = 0;
@@ -97,12 +100,12 @@ public class ImageIdentifier {
                 }
                 int current = pixelMatrix[y][x];
 
-                //check to see if we ran into the top of a new shape
+                //examine if at the top of a new object/shape
                 if(current == 1 && (leftOf == 0 && topLeftOf == 0 && topOf == 0 && topRightOf == 0 &&
                         topRightOfPlus1 == 0 && topLeftOfPlus1 == 0  &&  topRightOfPlus2 == 0 && topLeftOfPlus2 == 0  &&
                         topRightOfPlus3 == 0 && topLeftOfPlus3 == 0)) {
 
-                    //Double check there is nothing to the left
+                    //make sure nothing to the left
                     boolean foundaOne = false;
                     for(int toLeft = x-1; toLeft > 0; toLeft--) {
                         int leftOfCheck = pixelMatrix[y][toLeft];
@@ -114,30 +117,29 @@ public class ImageIdentifier {
                     if(!foundaOne)  {
                         //New shape has been found - create an object to represent it
                         numObject++;
-                        RavensObject ravenObj = new RavensObject(String.valueOf(numObject));
+                        RavensObject ravenObj = new RavensObject(String.valueOf(numObject)); //named by the numObject (e.g. 4 for 5th)
 
 
-                        //Start to figure out what this shape is by seeing how far right it goes
+                        //identify shape by checking how far right it goes
                         int topRight = x;
                         int topLeft = x;
                         while(pixelMatrix[y][topRight] == 1) {
                             topRight++;
                         }
 
-                        //Now that we know how wide the top is, shoot down the middle to find the height
+                        //find out the height
                         int height = 0;
                         int objectTop = y;
                         int middle = topLeft + ((topRight - topLeft) / 2);
 
 
-                        //Next we need to find the height, so start following the outline of the shape
-                        //until we run into the line that goes down the center of the shape.
+                        //find out the height along the outer border of the shape
                         int[] cords =  new int[2];
                         int[] last = new int[2];
-                        //X Coordinate
+                        //x coord
                         cords[0] = topRight;
 
-                        //Y Coordinate
+                        //Y coord
                         cords[1] = objectTop;
                         last = cords;
                         int curveCount = 0;
@@ -165,7 +167,7 @@ public class ImageIdentifier {
 
                         height = cords[1] - objectTop;
 
-                        //From the height we know where the bottom is, so find out how wide the bottom is
+                        //find out the width of the bottom
                         int bottomLeft = middle;
                         int bottomRight = middle;
 
@@ -174,25 +176,25 @@ public class ImageIdentifier {
                             bottomRight++;
                         }
 
-                        //See how far left we can go from the bottom middle point
+                        //move from bottom middle point to the left
                         while(pixelMatrix[objectTop + (height)][bottomLeft] == 1) {
                             bottomLeft--;
                         }
 
-                        //From the height we know where the bottom is, so find out how wide the middle is
+                        //width of the bottom middle
                         int middleRight = middle;
                         int centerY = objectTop + (height/2);
 
-                        //See how far right we can go from the bottom middle point
-                        for(Coordinate pair : edges)  {
-                            if(pair.getY() == centerY && middleRight < pair.getX()) {
-                                middleRight = pair.getX();
+                        //bottom mid point to the far right
+                        for(Coordinate point : edges)  {
+                            if(point.getY() == centerY && middleRight < point.getX()) {
+                                middleRight = point.getX();
                             }
                         }
 
                         int middleLeft = middle - (middleRight - middle);
 
-                        //try to figure out if the object is filled or not
+                        //find out isFilled or not
                         int fillCheck = 1;
                         boolean isFilled = false;
                         while(pixelMatrix[objectTop+fillCheck][middle] == 1) {
@@ -200,7 +202,7 @@ public class ImageIdentifier {
                         }
                         isFilled = fillCheck > 5;
 
-                        //See how likely this object is to have followed a curved path
+                        //check if curved border exists
                         boolean followsCurve = curveCount > 10;
 
                         int topWidth = topRight - topLeft;
@@ -212,8 +214,42 @@ public class ImageIdentifier {
                                 new Coordinate(bottomLeft, (objectTop + height)), new Coordinate(bottomRight, (objectTop + height)), topWidth,
                                 middleWidth, bottomWidth, height, followsCurve, isFilled);
 
+                        currentIdentifiedObj = object;
 
-                        ravensObjects.add(populateObject(ravenObj, object));
+                        if (lastIdentifiedObj == null) {
+                            lastIdentifiedObj = currentIdentifiedObj;
+                        } else {
+                            //TODO: label the current object position with the last object as reference
+
+                            if (currentIdentifiedObj.topRight.getY() > lastIdentifiedObj.topRight.getY() &&
+                                    currentIdentifiedObj.topLeft.getY() > lastIdentifiedObj.topLeft.getY() &&
+                                    currentIdentifiedObj.bottomLeft.getY() < lastIdentifiedObj.bottomLeft.getY() &&
+                                    currentIdentifiedObj.bottomRight.getY() < lastIdentifiedObj.bottomRight.getY() &&
+
+                                    currentIdentifiedObj.topRight.getX() < lastIdentifiedObj.topRight.getX() &&
+                                    currentIdentifiedObj.topLeft.getX() > lastIdentifiedObj.topLeft.getX() &&
+                                    currentIdentifiedObj.bottomLeft.getX() > lastIdentifiedObj.bottomLeft.getX() &&
+                                    currentIdentifiedObj.bottomRight.getX() < lastIdentifiedObj.bottomRight.getX()) {
+
+                                spatialRelatedToLastObject = "inside";
+
+                            } else if (currentIdentifiedObj.topRight.getY() > lastIdentifiedObj.bottomRight.getY()) {
+                                spatialRelatedToLastObject = "below";
+                            } else if (currentIdentifiedObj.bottomRight.getY() < lastIdentifiedObj.topRight.getY()) {
+                                spatialRelatedToLastObject = "above";
+                            } else if (currentIdentifiedObj.bottomRight.getX() < lastIdentifiedObj.bottomLeft.getX()) {
+                                spatialRelatedToLastObject = "left-of";
+                            } else if (currentIdentifiedObj.bottomLeft.getX() > lastIdentifiedObj.bottomRight.getX()) {
+                                spatialRelatedToLastObject = "right-of";
+                            } else {
+                                spatialRelatedToLastObject = "overlap";
+                            }
+
+                            lastIdentifiedObj = currentIdentifiedObj; //update the lastIdentifiedObj to current
+                        }
+
+
+                        ravensObjects.add(describeRavensObject(ravenObj, object, spatialRelatedToLastObject, Integer.toString(numObject-1)));
                         //mark the edges as used
                         for(Coordinate coordinate : edges) {
                             try {
@@ -355,16 +391,18 @@ public class ImageIdentifier {
     }
 
     /**
-     * Create a RavensObject from the infromation gathered to map out an object
+     * Describe a RavensObject verbally from the infromation gathered to map out an object
      * The only attributes supported at this point are fill, size and shape
      * This method depends on pass by reference.
      *
      * @param ravenObj - RavensObject to be populated with gathered knowledge
      * @param object - IdentifiedObject which contains info from prior knowledge
+     * @param spatialRelation - spatial relationship (e.g. below)
+     * @param spatialReference - reference object for the spatial relationship
      */
-    private RavensObject populateObject(RavensObject ravenObj, IdentifiedObject object) {
+    private RavensObject describeRavensObject(RavensObject ravenObj, IdentifiedObject object, String spatialRelation, String spatialReference) {
         HashMap<String, String> attributes = new HashMap<>();
-        //ArrayList<ROAttributeValuePair> attrs = new ArrayList<>();
+        //ArrayList<ROAttributeValuepoint> attrs = new ArrayList<>();
 
         ravenObj.getAttributes().put("shape", object.getShape().toString());
         ravenObj.getAttributes().put("fill", object.isFilled ? "yes" : "no");
@@ -377,6 +415,11 @@ public class ImageIdentifier {
         }else if(object.getHeight() < 90)  {
             ravenObj.getAttributes().put("size", "small");
         }
+
+        if (spatialRelation != null) {
+            ravenObj.getAttributes().put(spatialRelation, spatialReference);
+        }
+
         return ravenObj;
     }
 
