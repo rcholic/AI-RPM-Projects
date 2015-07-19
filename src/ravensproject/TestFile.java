@@ -80,6 +80,9 @@ public class TestFile {
             e.printStackTrace();
         }
 
+        String term = "ABC";
+        System.out.println(String.valueOf(term.charAt(0)));
+
 
 
     }

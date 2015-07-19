@@ -45,12 +45,6 @@ public class ImageIdentifier {
         RavensFigure ravensFigure = new RavensFigure(figureName, problem.getName(), problemSetName);
         List<RavensObject> ravensObjects = new ArrayList<>();
         int numObject = 0;
-
-//        int topRightX = inputImage.getWidth();
-//        int topRightY = inputImage.getHeight();
-//        int bottomLeftX = inputImage.getMinX();
-//        int bottomLeftY = inputImage.getMinY();
-
         Coordinate bottomRightPoint = new Coordinate(inputImage.getWidth(), inputImage.getHeight());
         Coordinate topLeftPoint = new Coordinate(inputImage.getMinX(), inputImage.getMinY());
 

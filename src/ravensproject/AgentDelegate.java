@@ -1,5 +1,6 @@
 package ravensproject;
 
+import ravensproject.Utils.ImageProcessor;
 import ravensproject.models.RavenFigureLevel.RFTransformation;
 import ravensproject.models.RavenObjectLevel.ROTransformation;
 
@@ -63,6 +64,7 @@ public class AgentDelegate {
         // int answerChoice = 6;
 
         ImageSolver imageSolver = new ImageSolver();
+        ImageProcessor imageProcessor = new ImageProcessor();
 
         System.out.println("solving problem: " + this.ravensProblem.getName());
         if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVerbal()) {
@@ -70,11 +72,15 @@ public class AgentDelegate {
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVerbal()) {
             solve3x3RPM(ravensProblem);
         } else if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVisual()) {
-            RavensProblem describedProblem = imageSolver.solve2x2RPMVisually(ravensProblem);
-            solve2x2RPM(describedProblem);
+           // RavensProblem describedProblem = imageSolver.solve2x2RPMVisually(ravensProblem);
+           // solve2x2RPM(describedProblem);
+            this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
+            getAnswerChoice();
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVisual()) {
-            RavensProblem describedProblem = imageSolver.solve3x3RPMVisually(ravensProblem);
-            solve3x3RPM(describedProblem);
+           // RavensProblem describedProblem = imageSolver.solve3x3RPMVisually(ravensProblem);
+           // solve3x3RPM(describedProblem);
+            this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
+            getAnswerChoice();
         }
 
         //return answerChoice;
@@ -335,7 +341,9 @@ public class AgentDelegate {
         this.answerChoice = tie;
     }
 
-
+    public int getAnswerChoice() {
+        return answerChoice;
+    }
 
     public static void main(String[] args) {
         List<Integer> myList = new ArrayList<>();

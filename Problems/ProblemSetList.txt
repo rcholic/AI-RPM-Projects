@@ -2,3 +2,7 @@ Basic Problems D
 Basic Problems E
 Basic Problems B
 Basic Problems C
+Challenge Problems B
+Challenge Problems C
+Challenge Problems D
+Challenge Problems E
