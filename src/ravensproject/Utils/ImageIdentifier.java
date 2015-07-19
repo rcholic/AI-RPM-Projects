@@ -239,6 +239,7 @@ public class ImageIdentifier {
         return ravensFigure;
     }
 
+    //getters and setters
     public RavensProblem getRavensProblem() {
         return ravensProblem;
     }
@@ -271,14 +272,14 @@ public class ImageIdentifier {
         this.figureName = figureName;
     }
 
-    /**********************************************************************************
-     * Find the next pixel in the outline of the shape.  Assumes that we are moving
-     * from top-center to bottom-center
+    /**
+     * Find the next adjacent pixel in the boundary of the shape.
+     * moving from top-center to bottom-center
      * @param cords - int[], where x-Cord is 0 and y-Cord is 1
      * @param map - int[][], representation of the image's pixels (0=white, 1=black)
      *
      * @return int[] - where x-Cord is 0, y-Cord is 1
-     ***********************************************************************************/
+     **/
     private int[] findNextInOutline(int[] cords, int[][] map, int[] last) {
         int[] toReturn = new int[2];
         int x =  cords[0];

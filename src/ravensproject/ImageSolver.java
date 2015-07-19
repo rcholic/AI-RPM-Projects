@@ -24,7 +24,7 @@ public class ImageSolver {
         this.imageIdentifier = new ImageIdentifier();
     }
 
-    public int solve2x2RPMVisually(RavensProblem problem) {
+    public RavensProblem solve2x2RPMVisually(RavensProblem problem) {
 
         describedFigures = new ArrayList<>();
         imageIdentifier.setRavensProblem(problem);
@@ -39,28 +39,30 @@ public class ImageSolver {
             try {
                 pngFile = new File(figurePath);
                 inputImage = ImageIO.read(pngFile);
+                if (inputImage != null) {
+                    imageIdentifier.setBufferedImage(inputImage);
+                    imageIdentifier.setFigureName(figureName);
+                    imageIdentifier.setProblemSetName("empty");
+                }
+
+                RavensFigure describedRF = imageIdentifier.convertImageToRF();
+                describedFigures.add(describedRF);
+                problem.getFigures().put(figure.getName(), describedRF);
+
             } catch (IOException e) {
                 System.out.println("problem reading the image file");
                 e.printStackTrace();
             }
 
-            if (inputImage != null) {
-                imageIdentifier.setBufferedImage(inputImage);
-                imageIdentifier.setFigureName(figureName);
-                imageIdentifier.setProblemSetName("empty");
-            }
-
-            RavensFigure describedRF = imageIdentifier.convertImageToRF();
-            describedFigures.add(describedRF);
-
             //convertImageToRF(figureName, figurePath);
         }
-        System.out.println("number of describedFigures: " + describedFigures.size());
-        return this.answerChoice;
+        //System.out.println("number of describedFigures: " + describedFigures.size());
+
+        return problem;
     }
 
 
-    public int solve3x3RPMVisually(RavensProblem problem) {
+    public RavensProblem solve3x3RPMVisually(RavensProblem problem) {
         describedFigures = new ArrayList<>();
         imageIdentifier.setRavensProblem(problem);
 
@@ -87,6 +89,8 @@ public class ImageSolver {
                 }
 
                 RavensFigure describedRF = imageIdentifier.convertImageToRF();
+                problem.getFigures().put(figure.getName(), describedRF);
+
 //                printWriter = new PrintWriter(descriptionFile);
 //                printWriter.write(problem.getName());
 //                printWriter.write(figure.getName());
@@ -97,6 +101,7 @@ public class ImageSolver {
 //                printWriter.close();
                 describedFigures.add(describedRF);
 
+
             } catch (IOException e) {
                 System.out.println("problem reading the image file");
                 e.printStackTrace();
@@ -105,53 +110,7 @@ public class ImageSolver {
 
         }
         System.out.println("number of describedFigures: " + describedFigures.size());
-        return this.answerChoice;
-    }
-
-
-    private void convertImageToRF(String figureName, String figurePath) {
-        RavensFigure currRavensFigure = null;
-        File pngFile = null;
-        BufferedImage pngImage = null;
-        try {
-            pngFile = new File(figurePath);
-            pngImage = ImageIO.read(pngFile);
-            BufferedImage outputImage = new BufferedImage(pngImage.getWidth(),
-                    pngImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-//            Graphics2D g = pngImage.createGraphics();
-//            g.drawImage(pngImage, 0, 0, null);
-//            g.dispose();
-
-            System.out.println("pngImage width: " + pngImage.getWidth() + ", height: " + pngImage.getHeight());
-            // currRavensFigure =
-        } catch (IOException e) {
-            System.err.println("cannot read image file for figure: " + figureName);
-            e.printStackTrace();
-        }
-
-        if (pngImage != null) {
-            for (int i = 0; i < pngImage.getWidth(); i++) {
-                for (int j = 0; j < pngImage.getHeight(); j++) {
-                    Integer pixelRGB = pngImage.getRGB(i, j);
-                    if (pixelRGB != -1) {
-                        // System.out.println("black pixel RGB: " + pixelRGB);
-                    }
-                    int r = pixelRGB &0xFF;
-                    int g = (pixelRGB>>8)&0XFF;
-                    int b = (pixelRGB>>16)&0xFF;
-                    if (r == 0 && g == 0 && b == 0) {
-                        System.out.println("black color: 1");
-                    } else {
-                        System.out.println("white color: 0");
-                    }
-
-                }
-            }
-            //Raster RGB = pngImage.getRaster();
-            //System.out.println("Raster: " + RGB.toString());
-        }
-
-        // return currRavensFigure;
+        return problem;
     }
 
 

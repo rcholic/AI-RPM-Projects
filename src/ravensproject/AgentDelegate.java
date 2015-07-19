@@ -70,9 +70,11 @@ public class AgentDelegate {
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVerbal()) {
             solve3x3RPM(ravensProblem);
         } else if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVisual()) {
-            this.answerChoice = imageSolver.solve2x2RPMVisually(ravensProblem);
+            RavensProblem describedProblem = imageSolver.solve2x2RPMVisually(ravensProblem);
+            solve2x2RPM(describedProblem);
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVisual()) {
-            this.answerChoice = imageSolver.solve3x3RPMVisually(ravensProblem);
+            RavensProblem describedProblem = imageSolver.solve3x3RPMVisually(ravensProblem);
+            solve3x3RPM(describedProblem);
         }
 
         //return answerChoice;
