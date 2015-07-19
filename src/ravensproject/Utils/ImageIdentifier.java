@@ -66,7 +66,6 @@ public class ImageIdentifier {
             }
         }
         
-        //copied below
         IdentifiedObject currentIdentifiedObj = null;
         IdentifiedObject lastIdentifiedObj = null;
         String spatialRelatedToLastObject = null;
@@ -269,9 +268,7 @@ public class ImageIdentifier {
             RavensObject curRavensObject = ravensObjects.get(i);
             ravensFigure.getObjects().put(curRavensObject.getName(), curRavensObject);
         }
-        
-        
-        //copied above
+
         return ravensFigure;
     }
 
