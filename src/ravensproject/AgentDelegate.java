@@ -72,15 +72,15 @@ public class AgentDelegate {
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVerbal()) {
             solve3x3RPM(ravensProblem);
         } else if (this.ravensProblem.getProblemType().contains("2x2") && this.ravensProblem.hasVisual()) {
-           // RavensProblem describedProblem = imageSolver.solve2x2RPMVisually(ravensProblem);
-           // solve2x2RPM(describedProblem);
-            this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
-            getAnswerChoice();
+            RavensProblem describedProblem = imageSolver.solve2x2RPMVisually(ravensProblem);
+            solve2x2RPM(describedProblem);
+           // this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
+           // getAnswerChoice();
         } else if (this.ravensProblem.getProblemType().contains("3x3") && this.ravensProblem.hasVisual()) {
-           // RavensProblem describedProblem = imageSolver.solve3x3RPMVisually(ravensProblem);
-           // solve3x3RPM(describedProblem);
-            this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
-            getAnswerChoice();
+            RavensProblem describedProblem = imageSolver.solve3x3RPMVisually(ravensProblem);
+            solve3x3RPM(describedProblem);
+           // this.answerChoice = imageProcessor.solveByPixelCounts(ravensProblem);
+           // getAnswerChoice();
         }
 
         //return answerChoice;
