@@ -63,7 +63,6 @@ public class AgentDelegate {
     public void solve() {
         // int answerChoice = 6;
 
-        // ImageSolver imageSolver = new ImageSolver();
         ImageProcessor imageProcessor = new ImageProcessor();
 
         System.out.println("solving problem: " + this.ravensProblem.getName());
